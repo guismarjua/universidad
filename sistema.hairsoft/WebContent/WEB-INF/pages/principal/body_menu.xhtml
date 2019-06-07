@@ -14,7 +14,7 @@
 	
 		<p:menuitem  value="Inicio" actionListener="#{routerMBean.moduloPrincipal()}" icon="ui-icon-home" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px" styleClass="#{routerMBean.body eq 'inicio' ? 'ui-menu-active' : '' }"/>
 		
-		<p:submenu label="Mantenedor" icon="ui-icon-wrench" styleClass="#{routerMBean.body eq 'mantenedor-usuario' ? 'ui-menu-active' : 
+		<p:submenu label="Mantenedores" icon="ui-icon-wrench" styleClass="#{routerMBean.body eq 'mantenedor-usuario' ? 'ui-menu-active' : 
 						(routerMBean.body eq 'mantenedor-proyecto' ? 'ui-menu-active' : 
 						(routerMBean.body eq 'mantenedor-sitio' ? 'ui-menu-active' : ' ' )) }">
 						

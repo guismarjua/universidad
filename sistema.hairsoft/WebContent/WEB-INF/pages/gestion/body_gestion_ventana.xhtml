@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-ventana" header="Gestion de Ventana" rendered="#{routerMBean.body eq 'gestion-ventana'}" >
+		<h:form id="form-tabla-gestion-ventana" >
+		<p:growl id="growl" showDetail="true" life="3000" /> 
+		<p:commandButton value="Crear Nueva Ventana" update="@form" process="@this" actionListener="#{ventanaMBean.crearVentana()}" icon="ui-icon-plus" onstart="PF('dialogo-loading').show()" oncomplete="PF('dialogo-loading').hide()" rendered="#{loginMBean.role != 'MANAGER'}"/>
+			<br/><br/>
+			<p:dataTable id="dt-tabla-gestion-ventana" widgetVar="dt-tabla-gestion-ventana"
+					emptyMessage="Sin Registros."
+					value="#{ventanaMBean.listaVentanas}" var="filas"
+					rows="7" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+					
+					<p:column headerText="Ventana" filterable="true" width="50"  filterBy="#{filas.idVentana}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.idVentana}"> </h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Actividades." filterable="true" width="500" filterBy="#{filas.listadoActividades}" filterMatchMode="contains" >
+						<h:outputText value="#{filas.listadoActividades}"></h:outputText>
+					</p:column>
+					<p:column headerText="Fecha Creaci&#243;n" filterable="true" width="100" filterBy="#{filas.fecCre}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.fecCre}">
+								<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+							</h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Ultima Modificaci&#243;n" filterable="true" width="100" filterBy="#{filas.fecMod}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.fecMod}">
+								<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+							</h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Asociar Actividad" width="45" rendered="#{loginMBean.role != 'MANAGER'}">
+						<div align="center">
+							<p:commandButton update="form-detalle-ventana" actionListener="#{ventanaMBean.cargarActividadesAsignadas(filas.idVentana)}" oncomplete="PF('dialog-detalle-ventana').show()" icon="ui-icon-pencil" title="Ver" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()">
+			                	<f:setPropertyActionListener value="#{filas}" target="#{ventanaMBean.ventanaSelected}"  />
+			             	</p:commandButton>
+						</div>
+					</p:column>
+					<p:column headerText="Eliminar" width="45" rendered="#{loginMBean.role != 'MANAGER'}">
+						<div align="center">
+							<p:commandButton id="cb-eliminar-ventana" icon="ui-icon-close"
+								title="Eliminar"
+								onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"
+								action="#{ventanaMBean.eliminarVentana(filas)}"
+								update="@form" process="@this">
+								<p:confirm header="Confirmaci&oacute;n"
+									message="¿Est&aacute; seguro que desea eliminar la ventana seleccionada?"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+							<p:confirmDialog showEffect="fade" hideEffect="explode">
+								<p:commandButton value="Si" type="button" icon="ui-icon-check" />
+								<p:commandButton value="No" type="button" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</div>
+					</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</html>

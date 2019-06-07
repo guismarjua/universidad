@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.DescargaActividadMapper">
+
+	<select id="findActividad" resultType="actividadto" parameterType="actividadto">
+		SELECT A.ID_ACTIVIDAD AS idActividad,
+		A.ID_ACT AS idAct,
+		A.CRQ AS crqActividad,
+		A.SINTESIS_ACTIVIDAD as sintesisActividad,
+		A.IMPACTO AS impactoActividad,
+		A.FECHA_INICIO AS fechaInicio,
+		A.FECHA_TERMINO AS fechaTermino,
+		A.ESTADO_INICIO AS estadoInicio,
+		A.ESTADO_TERMINO as estadoTermino,
+		A.OPERADOR_INICIO as operadorInicio,
+		A.OPERADOR_TERMINO as operadorTermino,
+		S.SITIO_SINERGIA as nombreSitio,
+		ST.STATUS as statusActividad,
+		SU.SUPERVISION as supervisionActividad,
+		P.NOMBRE_PROYECTO AS nombreProyecto,
+		A.FECHA_CREACION AS fechaCreacion,
+		A.FECHA_MODIFICACION AS fechaModificacion,
+		T.DESCRIPCION AS detalleTareas
+		FROM SGI_ACTIVIDAD A
+		INNER JOIN SGI_SITIO S ON S.ID_SITIO = A.ID_SITIO
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO 
+		INNER JOIN SGI_STATUS ST ON ST.ID_STATUS = A.ID_STATUS
+		INNER JOIN SGI_SUPERVISION SU ON SU.ID_SUPERVISION = A.ID_SUPERVISION
+		INNER JOIN SGI_TAREAS T ON T.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		WHERE A.ID_ACTIVIDAD = #{idActividad};
+	</select>
+	
+	<select id="findUsuarioCliente" resultType="usuarioto" parameterType="java.lang.Integer">
+		SELECT U.NOMBRE_USUARIO AS nombreUsuario,
+			   U.APELLIDO_USUARIO AS apellidoUsuario,
+			   U.TELEFONO_USUARIO AS telefonoUsuario,
+			   U.EMAIL_USUARIO AS emailUsuario
+		FROM SGI_CLIENTE_ACTIVIDAD CA
+		INNER JOIN SGI_USUARIO U ON U.ID_USUARIO = CA.ID_USUARIO  
+		WHERE ID_ACTIVIDAD = #{idActividad}
+		AND CA.VIGENCIA = 1
+	</select>
+	
+	<select id="findUsuarioSupervisor" resultType="usuarioto" parameterType="java.lang.Integer">
+		SELECT U.NOMBRE_USUARIO AS nombreUsuario,
+			   U.APELLIDO_USUARIO AS apellidoUsuario,
+			   U.TELEFONO_USUARIO AS telefonoUsuario,
+			   U.EMAIL_USUARIO AS emailUsuario
+		FROM SGI_SUPERVISOR_ACTIVIDAD SA
+		INNER JOIN SGI_USUARIO U ON U.ID_USUARIO = SA.ID_USUARIO
+		WHERE ID_ACTIVIDAD = #{idActividad}
+		AND SA.VIGENCIA = 1
+	</select>
+	
+	<select id="findEscalamientos" resultType="escalamientoto" parameterType="java.lang.Integer">
+		SELECT E.NIVEL AS nivel,
+			   E.NOMBRE AS nombre,
+			   E.TELEFONO AS telefono,
+			   E.CORREO AS correo
+		FROM SGI_ESCALAMIENTO E
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</select>
+	
+	<select id="findProveedores" resultType="proveedorto" parameterType="java.lang.Integer">
+		SELECT NOMBRE AS nombreProveedor,
+			   EMPRESA AS empresaProveedor,
+			   CARGO AS cargoProveedor,
+			   TELEFONO AS fonoProveedor,
+			   EMAIL AS correoProveedor
+		FROM SGI_INFORMACION_PROVEEDOR
+		WHERE ID_ACTIVIDAD = #{idActividad}
+		AND VIGENCIA = 1
+	</select>
+	
+	<select id="findAdjuntos" resultType="adjuntoto" parameterType="java.lang.Integer">
+		SELECT NOMBRE AS nombreAdjunto,
+			   DESCRIPCION AS descripcionAdjunto,
+			   URL AS urlAdjunto
+		FROM SGI_IMAGENES
+		WHERE ID_ACTIVIDAD = #{idActividad}
+		AND VIGENCIA = 1
+	</select>
+	
+</mapper>

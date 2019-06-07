@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+
+<ui:composition template="/WEB-INF/template/layout.xhtml">
+	<ui:define name="content" >
+		<p:layout id="home">	
+			<p:layoutUnit position="north" id="user-norte"  size="46" gutter="0" >
+				<ui:include src="/WEB-INF/pages/principal/body_menu.xhtml"  />
+			</p:layoutUnit>	
+			<p:layoutUnit position="center" id="user-central" gutter="0">			
+				<h:panelGrid id="general" columns="1" cellpadding="0" cellspacing="0" style="width:100%;">
+					<ui:include src="/WEB-INF/pages/principal/body_index.xhtml" />	
+					<ui:include src="/WEB-INF/pages/gestion/body_gestion_ventana.xhtml" />	
+					<ui:include src="/WEB-INF/pages/gestion/body_ver_actividad.xhtml" />	
+					<ui:include src="/WEB-INF/pages/gestion/body_detalle_actividad.xhtml" />
+					<ui:include src="/WEB-INF/pages/reportes/body_modulo_reportes.xhtml" />			
+				</h:panelGrid>			
+			</p:layoutUnit>
+		</p:layout> 		
+	</ui:define>
+	<ui:define name="dialogos" >
+		<ui:include src="/WEB-INF/pages/dialog/loading.xhtml" />
+		<ui:include src="/WEB-INF/pages/dialog/about.xhtml" />
+	</ui:define>	
+</ui:composition>
+</h:body>
+</html>

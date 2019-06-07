@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.ActividadProyectoMapper">
+
+	<select id="findAllActividadProyecto" resultType="actividadto">
+		SELECT DISTINCT(P.NOMBRE_PROYECTO) as nombreProyecto, COUNT(A.ID_ACTIVIDAD) as cantidadActv
+		FROM SGI_ACTIVIDAD A
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+		<if test = "fechaInicio != null and fechaTermino != null">
+			WHERE A.FECHA_TERMINO BETWEEN #{fechaInicio} and #{fechaTermino}
+		</if>
+		GROUP BY A.ID_PROYECTO
+	</select>	
+	
+	<select id="findAllActividadProyectoFecha" resultType="actividadto">
+		SELECT DISTINCT(P.NOMBRE_PROYECTO) as nombreProyecto, A.FECHA_INICIO AS FechaInicio, A.FECHA_TERMINO AS FechaFin, COUNT(A.ID_ACTIVIDAD) as cantidadActv
+		FROM SGI_ACTIVIDAD A
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+		WHERE A.FECHA_INICIO BETWEEN #{fechaInicio} and #{fechaTermino}
+		and A.FECHA_TERMINO BETWEEN #{fechaInicio} and #{fechaTermino}
+		GROUP BY A.ID_PROYECTO
+	</select>
+</mapper>

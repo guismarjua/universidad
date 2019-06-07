@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-sitio" header="Mantenedor de Productos" rendered="#{routerMBean.body eq 'mantenedor-sitio'}" >
+	<h:form id="form-tabla-mantenedor-sitio" >
+		<p:growl id="growl" showDetail="true" life="3000" /> 
+		<p:commandButton value="Agregar Nuevo Producto" update="form-mantenedor-sitio" actionListener="#{routerMBean.agregarSitio()}" icon="ui-icon-plus" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+			<br/><br/>
+			<p:dataTable id="dt-tabla-mantenedor-sitio" widgetVar="dt-tabla-mantenedor-sitio"
+					emptyMessage="Sin Registros."
+					value="#{sitioMBean.sitios}" var="filas"
+					rows="5" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+					
+					<p:column headerText="Nombre Producto" filterable="true" filterBy="#{filas.sitioSinergia}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.sitioSinergia}"></h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Marca del Producto" filterable="true" filterBy="#{filas.detalleUbicacionTecnica}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.detalleUbicacionTecnica}"></h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Categoria" filterable="true" filterBy="#{filas.direccion}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.ubicacionTecnica}"></h:outputText>
+						</div>
+					</p:column>
+					<!--<p:column headerText="Campo Clasificaci&#243;n" filterable="true" filterBy="#{filas.clasificacion}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.clasificacion}"></h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Regi&#243;n" filterable="true" filterBy="#{filas.region}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.region}"></h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Comuna" filterable="true" filterBy="#{filas.comuna}" filterMatchMode="contains">
+						<div align="center">
+							<h:outputText value="#{filas.comuna}"></h:outputText>
+						</div>
+					</p:column>-->
+					<p:column headerText="Modificar" width="45">
+						<div align="center">
+							<p:commandButton action="#{routerMBean.modificarSitio(filas)}" update="form-dlg-modificar-sitio" icon="ui-icon-pencil" title="Ver" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+						</div>
+					</p:column>
+					<p:column headerText="Eliminar" width="45">
+						<div align="center">
+							<p:commandButton id="cb-eliminar-proyecto" icon="ui-icon-close"
+								title="Eliminar"
+								onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"
+								action="#{sitioMBean.eliminarSitio(filas)}"
+								update="@form" process="@this">
+								<p:confirm header="Confirmaci&oacute;n"
+									message="¿Est&aacute; seguro que desea eliminar el producto seleccionado?"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+							<p:confirmDialog showEffect="fade" hideEffect="explode">
+								<p:commandButton value="Si" type="button" icon="ui-icon-check" />
+								<p:commandButton value="No" type="button" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</div>
+					</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-usuario" header="Mantenedor de Clientes" rendered="#{routerMBean.body eq 'mantenedor-usuario'}" >
+	<h:form id="form-tabla-mantenedor-usuario" >
+		<p:growl id="growl" showDetail="true" life="3000" /> 
+			<p:commandButton value="Agregar Nuevo Cliente" update="form-dlg-agregar-usuario" actionListener="#{routerMBean.agregarUsuario()}" icon="ui-icon-plus" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+			<br/><br/>
+			<p:dataTable id="dt-tabla-mantenedor-usuario" widgetVar="dt-tabla-mantenedor-usuario"
+					emptyMessage="Sin Registros."
+					value="#{usuarioMBean.listaUsuarios}" var="filas"
+					rows="5" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+					
+					<p:column headerText="Nombre Cliente" filterable="true" filterBy="#{filas.nombreUsuario} #{filas.apellidoUsuario}" filterMatchMode="contains">
+						<h:outputText value="#{filas.nombreUsuario} #{filas.apellidoUsuario}"></h:outputText>
+					</p:column>
+					<p:column headerText="RUT Cliente" filterable="true" filterBy="#{filas.rutUsuario}-#{filas.dvUsuario}" filterMatchMode="contains">
+						<h:outputText value="#{filas.rutUsuario}-#{filas.dvUsuario}"></h:outputText>
+					</p:column>
+					<p:column headerText="Tel&#233;fono" filterable="true" filterBy="#{filas.telefonoUsuario}" filterMatchMode="contains">
+						<h:outputText value="#{filas.telefonoUsuario}"></h:outputText>
+					</p:column>
+					<p:column headerText="Email" filterable="true" filterBy="#{filas.emailUsuario}" filterMatchMode="contains">
+						<h:outputText value="#{filas.emailUsuario}"></h:outputText>
+					</p:column>
+					<!--<p:column headerText="Cargo" filterable="true" filterBy="#{filas.cargoUsuario}" filterMatchMode="contains">
+						<h:outputText value="#{filas.cargoUsuario}"></h:outputText>
+					</p:column>-->
+					<!--<p:column headerText="Rol" filterable="true" filterBy="#{filas.idRol}" filterMatchMode="contains">
+						<h:outputText value="#{filas.idRol}"></h:outputText>
+					</p:column>-->
+					<p:column headerText="Modificar" width="45">
+						<div align="center">
+							<p:commandButton update="form-dlg-modificar-usuario" oncomplete="PF('dlg-modificar-usuario').show()" icon="ui-icon-pencil" title="Ver" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()">
+			                	<f:setPropertyActionListener value="#{filas}" target="#{usuarioMBean.usuarioSelected}"  />
+			             	</p:commandButton>
+						</div>
+					</p:column>
+					<p:column headerText="Eliminar" width="45">
+						<div align="center">
+							<p:commandButton id="cb-eliminar-usuario" icon="ui-icon-close"
+								title="Eliminar"
+								onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"
+								action="#{usuarioMBean.eliminarUsuario(filas)}"
+								update="@form" process="@this">
+								<p:confirm header="Confirmaci&oacute;n"
+									message="¿Est&aacute; seguro que desea eliminar el cliente seleccionado?"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+							<p:confirmDialog showEffect="fade" hideEffect="explode">
+								<p:commandButton value="Si" type="button" icon="ui-icon-check" />
+								<p:commandButton value="No" type="button" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</div>
+					</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.ProyectosMapper">
+
+	<select id="findAllProyectos" resultType="proyectoto">
+		SELECT P.ID_PROYECTO as idProyecto,
+			   P.NOMBRE_PROYECTO as nombreProyecto,
+			   P.RESUMEN_PROYECTO as resumenProyecto,
+			   P.FECHA_INICIO_PROY as fechaInicio,
+			   P.FECHA_TERMINO_PROY as fechaTermino,
+			   P.ID_USUARIO AS identUsuario,
+			   P.ID_SITIO AS identSitio,
+			   U.NOMBRE_USUARIO as nombreUsuario,
+			   U.APELLIDO_USUARIO as apellidoUsuario,
+			   S.DETALLE_UBIC_TEC as nombreSitio,
+			   P.VIGENCIA as vigencia
+	    FROM SGI_PROYECTO P
+	    INNER JOIN SGI_USUARIO U ON U.ID_USUARIO = P.ID_USUARIO
+	    INNER JOIN SGI_SITIO S ON S.ID_SITIO = P.ID_SITIO
+		WHERE P.VIGENCIA = 1
+		ORDER BY P.ID_PROYECTO DESC;
+	</select>
+	
+	<update id="deleteProyecto" parameterType="proyectoto">
+		UPDATE SGI_PROYECTO
+		SET VIGENCIA = #{vigencia}
+		WHERE ID_PROYECTO = #{idProyecto};
+	</update>
+	
+	<insert id="insertProyecto" parameterType="proyectoto">   	    	
+		INSERT INTO SGI_PROYECTO (NOMBRE_PROYECTO, RESUMEN_PROYECTO, FECHA_INICIO_PROY, FECHA_TERMINO_PROY, ID_USUARIO, ID_SITIO, VIGENCIA)
+		VALUES(#{nombreProyecto}, #{resumenProyecto}, #{fechaInicio}, #{fechaTermino}, #{identUsuario}, #{identSitio}, 1)
+	</insert>
+	
+	<update id="updateProyecto" parameterType="proyectoto">
+		UPDATE SGI_PROYECTO SET 
+			NOMBRE_PROYECTO = #{nombreProyecto}, 
+			RESUMEN_PROYECTO = #{resumenProyecto}, 
+			FECHA_INICIO_PROY = #{fechaInicio}, 
+			FECHA_TERMINO_PROY = #{fechaTermino}, 
+			ID_USUARIO = #{identUsuario}, 
+			ID_SITIO = #{identSitio}
+			WHERE ID_PROYECTO = #{idProyecto}
+	</update>
+	
+</mapper>

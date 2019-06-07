@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:form id="form-menu-principal">
+   
+	<p:menubar id="menu-administrador" rendered="#{loginMBean.role eq 'ADMIN'}" style="width:99,9%;" >
+	
+		<p:menuitem  value="Inicio" actionListener="#{routerMBean.moduloPrincipal()}" icon="ui-icon-home" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px" styleClass="#{routerMBean.body eq 'inicio' ? 'ui-menu-active' : '' }"/>
+		
+		<p:submenu label="Mantenedor" icon="ui-icon-wrench" styleClass="#{routerMBean.body eq 'mantenedor-usuario' ? 'ui-menu-active' : 
+						(routerMBean.body eq 'mantenedor-proyecto' ? 'ui-menu-active' : 
+						(routerMBean.body eq 'mantenedor-sitio' ? 'ui-menu-active' : ' ' )) }">
+						
+			<p:menuitem  value="Clientes"  actionListener="#{routerMBean.moduloMantenedorUsuario()}"  icon="ui-icon-person" update=":form-menu-principal,:general"  onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" styleClass="#{routerMBean.body eq 'mantenedor-usuario' ? 'ui-menu-active' : 'ui-submenu-inactive'}" />		
+			<p:menuitem  value="Servicios"  actionListener="#{routerMBean.moduloMantenedorProyecto()}"  icon="ui-icon-suitcase" update=":form-menu-principal,:general" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"  styleClass="#{routerMBean.body eq 'mantenedor-proyecto' ? 'ui-menu-active' : 'ui-submenu-inactive'}" />
+			<p:menuitem  value="Productos" actionListener="#{routerMBean.moduloMantenedorSitio()}"  icon="ui-icon-pin-s" update=":form-menu-principal,:general" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" styleClass="#{routerMBean.body eq 'mantenedor-sitio' ? 'ui-menu-active' : 'ui-submenu-inactive'}" />
+			<p:menuitem  value="Profesionales" actionListener="#{routerMBean.moduloMantenedorSitio()}"  icon="ui-icon-pin-s" update=":form-menu-principal,:general" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" styleClass="#{routerMBean.body eq 'mantenedor-sitio' ? 'ui-menu-active' : 'ui-submenu-inactive'}" />
+		</p:submenu>
+		
+		<p:menuitem  value="Agenda" actionListener="#{routerMBean.moduloAgenda()}" icon="ui-icon-arrowthick-1-ne"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'modulo-agenda' ? 'ui-menu-active' : '' }"/>
+
+		<p:menuitem  value="Inventario" actionListener="#{routerMBean.moduloAgenda()}" icon="ui-icon-arrowthick-1-ne"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'modulo-agenda' ? 'ui-menu-active' : '' }"/>
+
+		<p:menuitem  value="Ficha T&eacute;cnica" actionListener="#{routerMBean.moduloAgenda()}" icon="ui-icon-arrowthick-1-ne"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'modulo-agenda' ? 'ui-menu-active' : '' }"/>
+
+		<p:menuitem  value="Reportes" actionListener="#{routerMBean.moduloReportes()}" icon="ui-icon-shuffle"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'modulo-reportes' ? 'ui-menu-active' : '' }"/>
+		
+		<p:submenu label="Ayuda" icon="ui-icon-help" >
+			<p:menuitem  value="Acerca de" actionListener="#{routerMBean.acercaDe()}" icon="ui-icon-comment" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+			<p:menuitem  value="Manual de Usuario" actionListener="#{routerMBean.manualUsuario()}" icon="ui-icon-bookmark" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" styleClass="#{routerMBean.body eq 'manual-usuario' ? 'ui-menu-active' : '' }" />
+		</p:submenu>
+		<f:facet name="options">
+				<h:outputText value="Usuario: " />
+				<h:outputText value="#{loginMBean.usuarioLogueado}" style="font-weight:bold;"/>	
+				<p:spacer width="10"/>
+			<p:commandButton value="Salir" icon="ui-icon-extlink" action="#{loginMBean.salir}" immediate="true" >
+					<p:confirm header="Confirmaci&oacute;n" message="¿Est&aacute;s seguro de salir del sistema?"
+						icon="ui-icon-alert"  />
+			</p:commandButton>				
+		</f:facet>										
+	</p:menubar>	
+		
+	<p:menubar id="menu-cliente" toggleable="true" rendered="#{loginMBean.role eq 'CLIENTE'}" style="width:99,9%;">
+	
+		<p:menuitem  value="Inicio" actionListener="#{routerMBean.moduloPrincipalCliente()}"  icon="ui-icon-home"  update="form-menu-principal,:general " onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" style="margin-right:7px" styleClass="#{routerMBean.body eq 'inicio' ? 'ui-menu-active' : '' }"/>
+		
+		<p:menuitem  value="Reportes" actionListener="#{routerMBean.moduloReportes()}" icon="ui-icon-shuffle"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'modulo-reportes' ? 'ui-menu-active' : '' }"/>
+		
+		<p:submenu label="Ayuda" icon="ui-icon-help" >
+			<p:menuitem  value="Acerca de" actionListener="#{routerMBean.acercaDe()}" icon="ui-icon-comment" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+		</p:submenu>
+			
+		<f:facet name="options">
+			<h:outputText value="Usuario: " />
+			<h:outputText value="#{loginMBean.usuarioLogueado}" style="font-weight:bold;"/>
+			<p:spacer width="10"/>
+			<p:commandButton value="Salir" icon="ui-icon-extlink" action="#{loginMBean.salir}" immediate="true" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" >
+				<p:confirm header="Confirmaci&oacute;n" message="¿Est&aacute;s seguro de salir del sistema?"
+					icon="ui-icon-alert"  />
+			</p:commandButton>	
+		</f:facet>										
+	</p:menubar>
+	
+	<p:menubar id="menu-ito" toggleable="true" rendered="#{loginMBean.role eq 'ITO'}" style="width:99,9%;">
+	
+		<p:menuitem  value="Inicio" actionListener="#{routerMBean.moduloPrincipalITO()}"  icon="ui-icon-home"  update="form-menu-principal,:general " onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" style="margin-right:7px" styleClass="#{routerMBean.body eq 'inicio' ? 'ui-menu-active' : '' }"/>
+		
+		<p:submenu label="Gesti&#243;n de Actividades" icon="ui-icon-wrench" styleClass="#{routerMBean.body eq 'ver-actividad' ? 'ui-menu-active' : 
+						(routerMBean.body eq 'agregar-actividad' ? 'ui-menu-active' : ' ' ) }">	
+			<p:menuitem  value="Ver Actividad" actionListener="#{routerMBean.verActividad()}" icon="ui-icon-folder-collapsed"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'ver-actividad' ? 'ui-menu-active' : 'ui-submenu-inactive' }"/>
+			<p:menuitem  value="Agregar Actividad" actionListener="#{routerMBean.agregarActividad()}" icon="ui-icon-folder-collapsed"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'agregar-actividad' ? 'ui-menu-active' : 'ui-submenu-inactive' }"/>		
+		</p:submenu>
+			
+		<p:submenu label="Ayuda" icon="ui-icon-help" >
+			<p:menuitem  value="Acerca de" actionListener="#{routerMBean.acercaDe()}" icon="ui-icon-comment" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+		</p:submenu>
+		
+		<f:facet name="options">
+			<h:outputText value="Usuario: " />
+			<h:outputText value="#{loginMBean.usuarioLogueado}" style="font-weight:bold;"/>
+			<p:spacer width="10"/>
+			<p:commandButton value="Salir" icon="ui-icon-extlink" action="#{loginMBean.salir}" immediate="true" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" >
+				<p:confirm header="Confirmaci&oacute;n" message="¿Est&aacute;s seguro de salir del sistema?"
+					icon="ui-icon-alert"  />
+			</p:commandButton>	
+		</f:facet>										
+	</p:menubar>
+	
+	<p:menubar id="menu-manager" toggleable="true" rendered="#{loginMBean.role eq 'MANAGER'}" style="width:99,9%;">
+	
+		<p:menuitem  value="Inicio" actionListener="#{routerMBean.moduloPrincipalManager()}"  icon="ui-icon-home"  update="form-menu-principal,:general " onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" style="margin-right:7px" styleClass="#{routerMBean.body eq 'inicio' ? 'ui-menu-active' : '' }"/>
+			
+		<p:menuitem  value="Gesti&#243;n de Ventanas" actionListener="#{routerMBean.moduloGestionVentana()}" icon="ui-icon-folder-collapsed"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'gestion-ventana' ? 'ui-menu-active' : '' }"/>
+		
+		<p:submenu label="Gesti&#243;n de Actividades" icon="ui-icon-wrench" styleClass="#{routerMBean.body eq 'ver-actividad' ? 'ui-menu-active' : 
+						(routerMBean.body eq 'detalle-actividad' ? 'ui-menu-active' : ' ' ) }">
+			<p:menuitem  value="Ver Actividad" actionListener="#{routerMBean.verActividad()}" icon="ui-icon-folder-collapsed"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'ver-actividad' ? 'ui-menu-active' : 'ui-submenu-inactive' }"/>	
+			<p:menuitem  value="Ver Detalle Actividad" actionListener="#{routerMBean.moduloDetalleActividad()}" icon="ui-icon-folder-collapsed"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'detalle-actividad' ? 'ui-menu-active' : 'ui-submenu-inactive' }"/>
+		</p:submenu>
+
+		<p:menuitem  value="Reportes" actionListener="#{routerMBean.moduloReportes()}" icon="ui-icon-shuffle"    onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" update=":form-menu-principal,:general" style="margin-right:7px"   styleClass="#{routerMBean.body eq 'modulo-reportes' ? 'ui-menu-active' : '' }"/>
+		
+		<p:submenu label="Ayuda" icon="ui-icon-help" >
+			<p:menuitem  value="Acerca de" actionListener="#{routerMBean.acercaDe()}" icon="ui-icon-comment" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+		</p:submenu>
+		
+		<f:facet name="options">
+				<h:outputText value="Usuario: " />
+				<h:outputText value="#{loginMBean.usuarioLogueado}" style="font-weight:bold;"/>	
+				<p:spacer width="10"/>
+			<p:commandButton value="Salir" icon="ui-icon-extlink" action="#{loginMBean.salir}" immediate="true" >
+					<p:confirm header="Confirmaci&oacute;n" message="¿Est&aacute;s seguro de salir del sistema?"
+						icon="ui-icon-alert"  />
+			</p:commandButton>				
+		</f:facet>												
+	</p:menubar>
+	
+	
+	 	<p:confirmDialog global="true" showEffect="fade" hideEffect="explode" >
+	        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+	        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	    </p:confirmDialog>			
+</h:form>
+
+</html>

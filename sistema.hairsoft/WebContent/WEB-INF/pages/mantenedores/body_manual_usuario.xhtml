@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-manual-usuario" header="Manual de Usuario" rendered="#{routerMBean.body eq 'manual-usuario'}" >
+
+	<p:tabView id="tab-principal" >
+		
+		<p:tab id="tab-cant-act-proy" title="Gr&aacute;fico  Ventas/Profesional">
+		
+			<h:form>
+				<h:panelGrid columns="5" cellpadding="5" >
+					
+						<p:outputLabel value="Fecha Desde" />
+						<p:calendar id="calendar-fecha-desde" pattern="dd-MM-yyyy"
+							locale="es" size="10"
+							value="#{actividadProyectoMBean.listaActvFecha.fechaInicio}"
+							readonlyInput="true" navigator="true">
+							<p:ajax event="dateSelect" update="calendar-fecha-hasta-act-proy" />
+						</p:calendar>
+						<p:outputLabel value="Fecha Hasta" />
+						<p:calendar id="calendar-fecha-hasta-act-proy" pattern="dd-MM-yyyy"
+							locale="es" size="10"
+							value="#{actividadProyectoMBean.listaActvFecha.fechaTermino}"
+							readonlyInput="true"
+							mindate="#{actividadProyectoMBean.listaActvFecha.fechaInicio}"
+							navigator="true" />
+						<p:commandButton value="Buscar"
+							actionListener="#{actividadProyectoMBean.cargarGraficos()}"	
+							update="dt-tabla-actividad-proyecto chart-actividades-proyectos"											
+							icon="ui-icon-search"
+							onstart="PF('dialogo-loading').show()"
+							onsuccess="PF('dialogo-loading').hide()" />
+				</h:panelGrid>	
+				
+				<h:panelGrid columns="1" cellpadding="5" >
+					<div class="ui-g">
+						<div class="ui-g-12">						
+							<p:chart id="chart-actividades-proyectos" type="bar"  model="#{actividadProyectoMBean.model}" > </p:chart>						
+						</div>
+						<div class="ui-g-12"> 
+							<p:dataTable id="dt-tabla-actividad-proyecto"
+								widgetVar="dt-tabla-actividad-proyecto"
+								emptyMessage="Sin Registros." style="width:100%;"
+								value="#{actividadProyectoMBean.listaActv}" var="filas" rows="10"
+								paginator="true" paginatorPosition="bottom"
+								rowsPerPageTemplate="5,10,15" >
+								<f:facet name="header">
+									<div style="text-align: right">
+										<h:commandLink id="exportar-excel-actividad-proyecto"
+											rendered="true" style="margin-right:20px">
+											<p:graphicImage name="excel.png" library="img"
+												style="width:24px;height:24px;" />
+											<p:dataExporter type="xls" target="dt-tabla-actividad-proyecto"
+												fileName="detalle-actividad-proyecto" />
+										</h:commandLink>
+										<p:tooltip id="toolTip-excel-detalle-actividad-proyecto"
+											for="exportar-excel-actividad-proyecto"
+											value="Exportar a Excel" showEffect="fade" hideEffect="fade"
+											position="left" />
+									</div>
+								</f:facet>
+								<p:column headerText="Ventas">
+									<h:outputText value="#{filas.nombreProyecto}"></h:outputText>
+								</p:column>
+								<p:column headerText="Profesional" style="width:20%;">
+									<h:outputText value="#{filas.cantidadActv}"></h:outputText>
+								</p:column>
+							</p:dataTable>	
+						</div>
+					</div>	
+				</h:panelGrid>
+			</h:form>
+		</p:tab>
+	</p:tabView>
+	
+</p:panel>
+</html>

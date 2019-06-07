@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-proyecto" header="Mantenedor de Servicios" rendered="#{routerMBean.body eq 'mantenedor-proyecto'}" >
+	<h:form id="form-tabla-mantenedor-proyecto" >
+	<p:growl id="growl" showDetail="true" life="3000" /> 
+		<p:commandButton value="Agregar Nuevo Servicio" update="form-mantenedor-proyecto" actionListener="#{routerMBean.agregarProyecto()}"  icon="ui-icon-plus" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>	
+			<br/><br/>
+			<p:dataTable id="dt-tabla-mantenedor-proyectos" widgetVar="dt-tabla-mantenedor-proyectos"
+					emptyMessage="Sin Registros."
+					value="#{proyectoMBean.proyectos}" var="filas"
+					rows="5" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+					
+					<p:column headerText="Nombre Servicio" filterable="true" filterBy="#{filas.nombreProyecto}" filterMatchMode="contains">
+						<div align="center">	
+							<h:outputText value="#{filas.nombreProyecto}"> </h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Descripci&#243;n del Servicio" filterable="true" filterBy="#{filas.nombreProyecto}" filterMatchMode="contains">
+						<div align="center">	
+							<h:outputText value="#{filas.resumenProyecto}"> </h:outputText>
+						</div>
+					</p:column>
+					<!--<p:column headerText="Fecha Inicio" filterable="true" filterBy="#{filas.fecIni}" filterMatchMode="contains">
+						<div align="center">	
+							<h:outputText value="#{filas.fecIni}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Fecha T&#233;rmino" filterable="true" filterBy="#{filas.fecTerm}" filterMatchMode="contains">
+						<div align="center">	
+							<h:outputText value="#{filas.fecTerm}">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Sitio" filterable="true" filterBy="#{filas.sitioSinergia} #{filas.nombreSitio}" filterMatchMode="contains">
+						<div align="center">	
+							<h:outputText value="#{filas.sitioSinergia} #{filas.nombreSitio}"></h:outputText>
+						</div>
+					</p:column>
+					<p:column headerText="Cliente" filterable="true" filterBy="#{filas.nombreUsuario} #{filas.apellidoUsuario}" filterMatchMode="contains">
+						<div align="center">		
+							<h:outputText value="#{filas.nombreUsuario} #{filas.apellidoUsuario}"></h:outputText>
+						</div>
+					</p:column>-->
+					<p:column headerText="Modificar" width="45">
+						<div align="center">
+							<p:commandButton actionListener="#{routerMBean.modificarProyecto(filas)}" update="form-dlg-modificar-proyecto" icon="ui-icon-pencil" title="Ver" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+						</div>
+					</p:column>
+					<p:column headerText="Eliminar" width="45">
+						<div align="center">
+							<p:commandButton id="cb-eliminar-proyecto" icon="ui-icon-close"
+								title="Eliminar"
+								onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"
+								action="#{proyectoMBean.eliminarProyecto(filas)}"
+								update="@form" process="@this">
+								<p:confirm header="Confirmaci&oacute;n"
+									message="¿Est&aacute; seguro que desea eliminar el servicio seleccionado?"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+							<p:confirmDialog showEffect="fade" hideEffect="explode">
+								<p:commandButton value="Si" type="button" icon="ui-icon-check" />
+								<p:commandButton value="No" type="button" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</div>
+					</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</html>

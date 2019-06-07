@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.LoginMapper">
+
+	<select id="findUsuario" resultType="usuarioto">
+		SELECT U.ID_USUARIO as idUsuario,
+			   U.NOMBRE_USUARIO as nombreUsuario, 
+			   U.APELLIDO_USUARIO as apellidoUsuario,
+			   U.ABREVIATURA_USUARIO as abreviaturaUsuario,
+			   U.RUT_USUARIO as rutUsuario,
+			   U.DV_USUARIO as dvUsuario,
+			   U.TELEFONO_USUARIO as telefonoUsuario,
+			   U.EMAIL_USUARIO as emailUsuario,
+			   U.CARGO_USUARIO as cargoUsuario,
+			   U.SKYPE_USUARIO as skypeUsuario,
+			   U.CONTRASENA as contrasenaUsuario,
+			   U.ID_ROL as identRol,
+			   R.ROL as idRol
+		FROM SGI_USUARIO U
+		INNER JOIN SGI_ROL R on R.ID_ROL = U.ID_ROL 
+		WHERE U.VIGENCIA = 1
+		AND U.RUT_USUARIO = #{usuario}
+		AND U.CONTRASENA = #{contrasena};
+	</select>
+
+</mapper>

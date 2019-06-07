@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dialog id="dialogo-modificar-sitio"  onShow="true" widgetVar="dlg-modificar-sitio" header="Modificar Sitio"  width="1200" style="min-height:250px;height:auto !important;" responsive="true"  modal="true" closeOnEscape="true">
+   		<h:form id="form-dlg-modificar-sitio">	
+   			<br/>
+   			<p:fieldset legend="Modificar Producto">
+				<h:panelGrid columns="6" cellpadding="5" style="width:100%;">
+									
+					<h:outputText value="Nombre Producto*" style="font-weight:bold"/>	
+					<p:inputText value="#{sitioMBean.sitioSelected.sitioSinergia}" maxlength="50" size="30" required="true" requiredMessage="Nombre Producto debe ser obligatorio"/>
+					
+					<h:outputText value="Marca del Producto*" style="font-weight:bold"/>	
+					<p:inputText value="#{sitioMBean.sitioSelected.detalleUbicacionTecnica}" maxlength="50" size="30" required="true" requiredMessage="Marca del Producto debe ser obligatorio"/>
+					
+					<h:outputText value="Categoria*" style="font-weight:bold"/>	
+					<p:inputText value="#{sitioMBean.sitioSelected.ubicacionTecnica}" maxlength="100" size="30" required="true" requiredMessage="Categoria debe ser obligatorio"/>
+					
+				</h:panelGrid>			
+				<br/>
+				<h:panelGrid columns="2" cellpadding="5" style="margin: 0 auto;">
+					<p:commandButton value="Guardar Cambios" 
+										icon="ui-icon-disk" 										
+										action="#{sitioMBean.modificarSitio()}"
+										update="panel-sitio, form-dlg-modificar-sitio, :form-tabla-mantenedor-sitio:dt-tabla-mantenedor-sitio"
+										onstart="PF('dialogo-loading').show()" 
+										onsuccess="PF('dialogo-loading').hide()" />
+					<p:commandButton value="Cerrar" icon="ui-icon-close" update="@form" proccess="@this" onclick="PF('dlg-modificar-sitio').hide();$('#form').trigger('reset');" type="button">	
+					</p:commandButton>
+				</h:panelGrid>
+			</p:fieldset>	
+		</h:form>
+	</p:dialog>
+</html>

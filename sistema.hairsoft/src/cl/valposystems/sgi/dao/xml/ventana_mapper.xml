@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.VentanasMapper">
+
+	<insert id="insertVentana" parameterType="ventanato">   	    	
+		INSERT INTO SGI_VENTANA (FECHA_CREACION, FECHA_MODIFICACION, VIGENCIA, ID_USUARIO)
+		VALUES(SYSDATE(),NULL,1,#{idUsuario})
+	</insert>
+	
+	<select id="findAllVentanas" resultType="ventanato">
+		SELECT V.ID_VENTANA AS idVentana,
+			   V.FECHA_CREACION AS fechaCreacion,
+			   V.FECHA_MODIFICACION AS fechaModificacion
+		FROM SGI_VENTANA V 
+		WHERE V.VIGENCIA = 1
+		ORDER BY ID_VENTANA DESC;
+	</select>
+	
+	<select id="findActividadesSinAsignar" resultType="actividadto">
+		SELECT A.ID_ACTIVIDAD as idActividad,
+			   A.CRQ as crqActividad,
+			   A.ID_ACT as idAct
+	 	FROM SGI_ACTIVIDAD A
+	 	WHERE A.ID_ACTIVIDAD NOT IN (SELECT AA.ID_ACTIVIDAD FROM SGI_VENTANA_ACTIVIDAD AA WHERE AA.VIGENCIA = 1)
+	</select>
+	
+	<select id="findActividadesAsignadas" parameterType="java.lang.Integer" resultType="actividadto">
+		SELECT A.ID_ACTIVIDAD as idActividad,
+			   A.CRQ as crqActividad,
+			   A.ID_ACT as idAct
+	 	FROM SGI_ACTIVIDAD A
+	 	WHERE A.ID_ACTIVIDAD IN (SELECT AA.ID_ACTIVIDAD FROM SGI_VENTANA_ACTIVIDAD AA WHERE AA.VIGENCIA = 1 AND AA.ID_VENTANA = #{idVentana})
+	</select>
+	
+	<insert id="insertVentanaActividad" parameterType="ventanaactividadto">
+		INSERT INTO SGI_VENTANA_ACTIVIDAD (ID_VENTANA, ID_ACTIVIDAD, VIGENCIA)
+		VALUES(#{idVentana},#{idActividad},#{vigencia})
+	</insert>
+	
+	<update id="updateVentanaActividad" parameterType="ventanaactividadto">
+		UPDATE SGI_VENTANA_ACTIVIDAD SET VIGENCIA = #{vigencia} 
+		WHERE ID_ACTIVIDAD = #{idActividad} AND ID_VENTANA = #{idVentana} AND VIGENCIA = 1
+	</update>
+	
+	<update id="updateFechaModificacionVentana" parameterType="java.lang.Integer">
+		UPDATE SGI_VENTANA SET FECHA_MODIFICACION = SYSDATE() 
+		WHERE ID_VENTANA = #{idVentana}
+	</update>
+	
+	<select id="findAllActividadesPorVentana" resultType="ventanaactividadto">
+		SELECT V.ID_VENTANA as idVentana, V.ID_ACTIVIDAD as idActividad, CONCAT(A.ID_ACT, "-", A.CRQ) AS actividad
+		FROM SGI_VENTANA_ACTIVIDAD V
+		INNER JOIN SGI_ACTIVIDAD A ON A.ID_ACTIVIDAD = V.ID_ACTIVIDAD
+		WHERE V.VIGENCIA = 1
+	</select>
+	
+	<update id="deleteVentanaActividad" parameterType="ventanaactividadto">
+		UPDATE SGI_VENTANA_ACTIVIDAD SET VIGENCIA = 0
+		WHERE ID_VENTANA = #{idVentana} AND VIGENCIA = 1
+	</update>
+	
+	<update id="deleteVentana" parameterType="ventanaactividadto">
+		UPDATE SGI_VENTANA SET VIGENCIA = 0, FECHA_MODIFICACION = SYSDATE() 
+		WHERE ID_VENTANA = #{idVentana}
+	</update>
+	
+</mapper>

@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-modificar-actividad" header="Modificar Actividades"
+	rendered="#{routerMBean.body eq 'modificar-actividad'}">
+		<h:form id="form-modificar-actividad">
+		<p:growl id="growl" showDetail="true" life="8000" />  
+			<p:fieldset id="fs-modificar-Supervision" legend="Reporte de supervisi&oacute;n">
+				<h:panelGrid columns="6" cellpadding="3" style="width:100%;" columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-4,ui-g-12 ui-md-2,ui-g-12 ui-md-4">
+					<h:outputLabel value="ID Acceso" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.idAct}"
+						maxlength="10" required="true"
+						requiredMessage="Debe indicar un ID de Acceso">
+					</p:inputText>
+
+					<h:outputLabel value="CRQ" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.crqActividad}"
+						maxlength="10" required="true"
+						requiredMessage="Debe indicar un CRQ">
+					</p:inputText>
+
+					<h:outputLabel value="Fecha " style="font-weight:bold"/>
+					<h:outputText value="#{now}" >
+					<f:convertDateTime pattern="dd-MM-yyyy" type="date" />
+					</h:outputText>		
+				</h:panelGrid>
+				<br />
+			</p:fieldset>
+			<br />
+			<p:fieldset id="fs-modificar-Proyecto" legend="Proyecto-Mop-Sitio/Nodo">
+				<h:panelGrid columns="6" cellpadding="4" style="width:100%;">
+					<h:outputText value="Nombre del Proyecto" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-proyecto"
+						value="#{actividadMBean.actividadSelected.proyectoSelected}"
+						style="width:150px" required="true"
+						requiredMessage="Debe indicar un Proyecto" appendTo="@this">
+						<f:selectItem itemLabel="Seleccione Proyecto" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividad.proyectos}"
+							var="proyectos" itemLabel="#{proyectos.nombreProyecto}"
+							itemValue="#{proyectos.idProyecto}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="S&iacute;ntesis de Actividad" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.sintesisActividad}"
+						maxlength="100" required="true"
+						requiredMessage="Debe indicar una S&iacute;ntesis de Actividad" />
+
+					<p:outputLabel value="Tipo Supervisi&oacute;n:" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-supervision"
+						value="#{actividadMBean.actividadSelected.supervisionSelected}"
+						style="width:150px" required="true"
+						requiredMessage="Debe indicar un Tipo de Supervisi&oacute;n" appendTo="@this">
+						<f:selectItem itemLabel="Seleccione Supervisi&oacute;n" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividad.supervisiones}"
+							var="supervisiones" itemLabel="#{supervisiones.supervision}"
+							itemValue="#{supervisiones.idSupervision}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nombre Sitio:" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-sitio"
+						value="#{actividadMBean.actividadSelected.sitioSelected}"
+						style="width:150px" required="true"
+						requiredMessage="Debe indicar un Sitio" appendTo="@this" filter="true" filterMatchMode="contains">
+						<f:selectItem itemLabel="Seleccione un Sitio" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividad.sitios}"
+							var="sitios" itemLabel="#{sitios.sitioSinergia} #{sitios.detalleUbicacionTecnica}"
+							itemValue="#{sitios.idSitio}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nivel Impacto:" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-impacto"
+						value="#{actividadMBean.actividadSelected.impactoActividad}"
+						required="true"
+						requiredMessage="Debe indicar un Nivel de Impacto" appendTo="@this">
+						<f:selectItem itemLabel="Seleccione Nivel de Impacto" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="1" itemValue="1"/>
+						<f:selectItem itemLabel="2" itemValue="2"/>
+						<f:selectItem itemLabel="3" itemValue="3"/>
+						<f:selectItem itemLabel="4" itemValue="4"/>
+						<f:selectItem itemLabel="5" itemValue="5"/>
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<br />
+			</p:fieldset>
+			<br />
+			<p:fieldset id="fs-modificar-InicioActividad" legend="Inicio de Actividad">
+				<h:panelGrid columns="6" cellpadding="4" style="width:100%;">
+					<h:outputLabel value="Fecha Inicio" for="fecha-inicioAct" style="font-weight:bold"/>
+					<p:calendar id="fecha-inicioAct" pattern="dd-MM-yyyy HH:mm"
+						value="#{actividadMBean.actividadSelected.fechaInicio}" required="true"
+						requiredMessage="Ingrese una Fecha de Inicio" locale="es"
+						size="15" readonlyInput="true" appendTo="@this">
+						<p:ajax event="dateSelect" listener="#{actividadMBean.setFinalDateEdit}" update="fs-modificar-TerminoActividad"/>
+					</p:calendar>
+
+					<p:outputLabel value="Estado Sitio Ini:" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.estadoInicio}"
+						maxlength="50" required="true"
+						requiredMessage="Debe indicar el Estado Inicial del Sitio" />
+
+					<h:outputText value="Confirma Operador(A) del Noc:" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.operadorInicio}"
+						maxlength="100" required="true"
+						requiredMessage="Debe ingresar Operador Noc Inicial" />
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+			<p:fieldset id="fs-modificar-TerminoActividad" legend="T&eacute;rmino de Actividad">
+				<h:panelGrid columns="6" cellpadding="4" style="width:100%;">
+					<h:outputLabel value="Fecha T&eacute;rmino" for="fecha-terminoAct" style="font-weight:bold"/>
+					<p:calendar id="fecha-terminoAct" pattern="dd-MM-yyyy HH:mm"
+						value="#{actividadMBean.actividadSelected.fechaTermino}" required="true"
+						mindate="#{actividadMBean.actividadSelected.fechaInicio}"
+						requiredMessage="Ingrese una Fecha de T&eacute;rmino" locale="es"
+						size="15" readonlyInput="true" appendTo="@this">
+						<p:ajax event="dateSelect" />
+					</p:calendar>
+
+					<p:outputLabel value="Estado Sitio Fin:" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.estadoTermino}"
+						maxlength="50" required="true"
+						requiredMessage="Debe indicar el Estado Final del Sitio" />
+
+					<h:outputText value="Confirma Operador(A) del Noc:" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.operadorTermino}"
+						maxlength="100" required="true"
+						requiredMessage="Debe ingresar Operador Noc T&eacute;rmino" />
+
+					<p:outputLabel value="La Actividad Concluye de Forma:" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-conclusion"
+						value="#{actividadMBean.actividadSelected.statusSelected}"
+						style="width:100px" required="true"
+						requiredMessage="Debe indicar una Conclusi&oacute;n" appendTo="@this">
+						<p:ajax listener="#{actividadMBean.cambioItemStatus(1)}" update="selectOneMenu-seleccion-conclusion-especifica" />
+						<f:selectItem itemLabel="Seleccione Conclusi&oacute;n" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividadSelected.status}"
+							var="status" itemLabel="#{status.status}"
+							itemValue="#{status.idStatus}" />
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Detalle de la actividad:" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-conclusion-especifica"
+						value="#{actividadMBean.actividadSelected.statusSelectedEspecifico}"
+						disabled="#{actividadMBean.habilitar}" appendTo="@this">
+						<f:selectItem itemLabel="Seleccione un Detalle de la Actividad" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividadSelected.statusEspecificos}"
+							var="statusSelected" itemLabel="#{statusSelected.statusEspecificos}"
+							itemValue="#{statusSelected.idStatusEspecificos}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+			<p:fieldset id="fs-modificar-InformacionPM" legend="Informaci&oacute;n: Personal de Claro PM (Ing. e Implantaci&oacute;n M&oacute;vil):">
+				<h:panelGrid columns="8" cellpadding="1" style="width:100%;">
+					<h:outputText value="Nombre: " style="font-weight:bold"/>	
+					<p:selectOneMenu id="selectOneMenu-seleccion-usuario-pm"
+						value="#{actividadMBean.actividadSelected.usuarioPMSelected}"
+						style="width:150px" required="true"
+						requiredMessage="Es necesario indicar un PM" appendTo="@this">
+						<f:selectItem itemLabel="Seleccione un Nombre" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividad.usuariosPM}"
+							var="pm" itemLabel="#{pm.nombreUsuario} #{pm.apellidoUsuario}"
+							itemValue="#{pm.idUsuario}" />
+						<p:ajax event="change" listener="#{actividadMBean.findDataUsuarioPMEditar}" update="form-modificar-actividad:fs-modificar-InformacionPM" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+					</p:selectOneMenu>
+							<h:outputText value="Cargo: " style="font-weight:bold"/>	
+							<h:outputText value="#{actividadMBean.actividadMostrar2.dataUsuario.cargoUsuario}" maxlength="100"/>
+							<h:outputText value="Correo: " style="font-weight:bold"/>	
+							<h:outputText value="#{actividadMBean.actividadMostrar2.dataUsuario.emailUsuario}" maxlength="100"/>
+							<h:outputText value="Fono: " style="font-weight:bold"/>	
+							<h:outputText value="#{actividadMBean.actividadMostrar2.dataUsuario.telefonoUsuario}" maxlength="100"/>
+				    </h:panelGrid>
+			</p:fieldset>
+			<br/>
+			<p:fieldset id="fs-modificar-InformacionES" legend="Informaci&oacute;n: Personal Claro Supervisor En Sitio (Ing. e Implantaci&oacute;n M&oacute;vil):">
+				<h:panelGrid columns="8" cellpadding="1" style="width:100%;">
+					<h:outputText value="Nombre: " style="font-weight:bold"/>	
+					<p:selectOneMenu id="selectOneMenu-seleccion-usuario-supervisor"
+						value="#{actividadMBean.actividadSelected.usuarioSupervisorSelected}"
+						style="width:150px" required="true"
+						requiredMessage="Es necesario indicar un Supervisor" appendTo="@this">
+						<f:selectItem itemLabel="Seleccione un Nombre" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{actividadMBean.actividad.usuariosSupervisor}"
+							var="supervisor" itemLabel="#{supervisor.nombreUsuario} #{supervisor.apellidoUsuario}"
+							itemValue="#{supervisor.idUsuario}" />
+						<p:ajax event="change" listener="#{actividadMBean.findDataUsuarioSupervEditar}" update="form-modificar-actividad:fs-modificar-InformacionES" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+					</p:selectOneMenu>
+							<h:outputText value="Cargo: " style="font-weight:bold"/>	
+							<h:outputText value="#{actividadMBean.actividadMostrar2.dataUsuarioSuperv.cargoUsuario}" maxlength="100"/>
+							<h:outputText value="Correo: " style="font-weight:bold"/>	
+							<h:outputText value="#{actividadMBean.actividadMostrar2.dataUsuarioSuperv.emailUsuario}" maxlength="100"/>
+							<h:outputText value="Fono: " style="font-weight:bold"/>	
+							<h:outputText value="#{actividadMBean.actividadMostrar2.dataUsuarioSuperv.telefonoUsuario}" maxlength="100"/>
+			    </h:panelGrid>
+			</p:fieldset>
+			<br/>
+			<p:fieldset id="fs-modificar-EscalamientoAct" legend="Escalamiento Actividad">
+				<h:panelGrid columns="8" cellpadding="1" style="width:100%;">
+					<h:outputText value="Nivel de Escalamiento" style="font-weight:bold"/>	
+					<p:inputText value="Primer Nivel" disabled="true"></p:inputText>
+					<h:outputText value="Nombre" style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento1.nombre}"
+						maxlength="150" required="true"
+						requiredMessage="Debe indicar un Nombre Escalamiento" />
+					<h:outputText value="Fono " style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento1.telefono}"
+						maxlength="15" required="true"
+						requiredMessage="Debe indicar un Tel&eacute;fono Escalamiento" validatorMessage="El teléfono debe ser numérico">
+						<f:validateRegex pattern="^[0-9]*$"/>
+					</p:inputText>
+					<h:outputText value="Correo" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento1.correo}"
+						maxlength="50" required="true"
+						requiredMessage="Debe indicar un Correo Escalamiento" validatorMessage="El formato del email es incorrecto. Favor Revisar">
+						<f:validateRegex pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$"/>
+					</p:inputText>
+					
+					<h:outputText value="Nivel de Escalamiento" style="font-weight:bold"/>	
+					<p:inputText value="Segundo Nivel" disabled="true"></p:inputText>
+					<h:outputText value="Nombre" style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento2.nombre}"
+						maxlength="150" required="true"
+						requiredMessage="Debe indicar un Nombre Escalamiento" />
+					<h:outputText value="Fono " style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento2.telefono}"
+						maxlength="15" required="true"
+						requiredMessage="Debe indicar un Tel&eacute;fono Escalamiento" validatorMessage="El teléfono debe ser numérico">
+						<f:validateRegex pattern="^[0-9]*$"/>
+					</p:inputText>
+					<h:outputText value="Correo" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento2.correo}"
+						maxlength="50" required="true"
+						requiredMessage="Debe indicar un Correo Escalamiento" validatorMessage="El formato del email es incorrecto. Favor Revisar">
+						<f:validateRegex pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$"/>
+					</p:inputText>
+					
+					<h:outputText value="Nivel de Escalamiento" style="font-weight:bold"/>	
+					<p:inputText value="Tercer Nivel" disabled="true"></p:inputText>
+					<h:outputText value="Nombre" style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento3.nombre}"
+						maxlength="150" required="true"
+						requiredMessage="Debe indicar un Nombre Escalamiento" />
+					<h:outputText value="Fono " style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento3.telefono}"
+						maxlength="15" required="true"
+						requiredMessage="Debe indicar un Tel&eacute;fono Escalamiento" validatorMessage="El teléfono debe ser numérico">
+						<f:validateRegex pattern="^[0-9]*$"/>
+					</p:inputText>
+					<h:outputText value="Correo" style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.actividadSelected.escalamiento3.correo}"
+						maxlength="50" required="true"
+						requiredMessage="Debe indicar un Correo Escalamiento" validatorMessage="El formato del email es incorrecto. Favor Revisar">
+						<f:validateRegex pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$"/>
+					</p:inputText>					
+			    </h:panelGrid>
+			</p:fieldset>
+			<br/>
+			<p:fieldset id="field-datosProveedores" legend="Informaci&oacute;n N° Folio: Personal Proveedor/Claro en Sitio y Remoto">
+				<h:panelGrid columns="8" cellpadding="2" style="width:100%;">
+					<h:outputText value="Nombre " style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.proveedorEditar.nombreProveedor}" maxlength="150"/>
+					<h:outputText value="Empresa " style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.proveedorEditar.empresaProveedor}" maxlength="150"/>
+					<h:outputText value="Cargo " style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.proveedorEditar.cargoProveedor}" maxlength="45"/>
+					<h:outputText value="Fono " style="font-weight:bold"/>	
+					<p:inputText value="#{actividadMBean.proveedorEditar.fonoProveedor}" maxlength="15" validatorMessage="El teléfono debe ser numérico">
+					<f:validateRegex pattern="^[0-9]*$"/>
+					</p:inputText>
+					<h:outputText value="Correo " style="font-weight:bold"/>
+					<p:inputText value="#{actividadMBean.proveedorEditar.correoProveedor}" maxlength="45"/>		
+				</h:panelGrid>
+				<h:panelGrid columns="2" cellpadding="2" >
+					<p:commandButton value="Cargar Proveedor" update="field-datosProveedores" action="#{actividadMBean.cargarProveedores(1)}" style="margin-right:20px;" process="@this form-modificar-actividad:field-datosProveedores" onstart="PF('dialogo-loading').show()"
+					onsuccess="PF('dialogo-loading').hide()" />
+					<p:commandButton value="Eliminar Proveedor" update="dt-tabla-mantenedor-proveedores" action="#{actividadMBean.eliminarProveedores(1)}" style="margin-right:20px;" process="@this" onstart="PF('dialogo-loading').show()"
+					onsuccess="PF('dialogo-loading').hide()" />
+				 </h:panelGrid>
+				<br/>
+				<p:dataTable id="dt-tabla-mantenedor-proveedores" widgetVar="dt-tabla-mantenedor-proveedores"
+					emptyMessage="Sin Registros."
+					value="#{actividadMBean.actividadSelected.proveedores}" var="filas"
+					rows="7" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+					
+					<p:column headerText="Nombre" filterable="false" filterBy="#{filas.nombreProyecto}" filterMatchMode="contains">
+						<h:outputText value="#{filas.nombreProveedor}"> </h:outputText>
+					</p:column>
+					<p:column headerText="Empresa" filterable="false" filterBy="#{filas.fechaInicio}" filterMatchMode="contains">
+						<h:outputText value="#{filas.empresaProveedor}"></h:outputText>
+					</p:column>
+					<p:column headerText="Cargo" filterable="false" filterBy="#{filas.fechaTermino}" filterMatchMode="contains">
+						<h:outputText value="#{filas.cargoProveedor}"></h:outputText>
+					</p:column>
+					<p:column headerText="Fono" filterable="false" filterBy="#{filas.nombreSitio}" filterMatchMode="contains">
+						<h:outputText value="#{filas.fonoProveedor}"></h:outputText>
+					</p:column>
+					<p:column headerText="Correo" filterable="false" filterBy="#{filas.nombreUsuario}" filterMatchMode="contains">
+						<h:outputText value="#{filas.correoProveedor}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+			</p:fieldset>
+			<br/>
+			<p:fieldset id="fs-modificar-Observaciones" legend="Ingrese Comentarios Para la Actividad" collapsed="true" toggleable="true" toggleSpeed="500">
+				<p:inputTextarea rows="10" cols="180" value="#{actividadMBean.actividadSelected.observacionActividad}" responsive="true" queryDelay="100" minQueryLength="4" required="true" requiredMessage="No es Posible Ingresar el Detalle de la Actividad Vac&iacute;a" placeholder="Escriba el Detalle de la Actividad."/>
+			</p:fieldset>
+			<br/>
+			<p:fieldset id="field-datosAdjuntos" legend="Cargar datos Adjuntos.">
+				<h:panelGrid columns="12" cellpadding="2" style="width:100%;">
+					<h:outputText value="Archivo " style="font-weight:bold"/>
+					<p:fileUpload fileUploadListener="#{actividadMBean.cargarAdjuntosEditar}" mode="advanced" dragDropSupport="false"
+                  	update="dt-tabla-mantenedor-adjuntos" sizeLimit="100000000" fileLimit="50" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+					<p:commandButton value="Eliminar Adjunto" update="dt-tabla-mantenedor-adjuntos" action="#{actividadMBean.eliminarAdjuntos(1)}" style="margin-right:20px;" process="@this" onstart="PF('dialogo-loading').show()"
+					onsuccess="PF('dialogo-loading').hide()" />
+				</h:panelGrid>
+				<br/>
+				<p:dataTable id="dt-tabla-mantenedor-adjuntos" widgetVar="dt-tabla-mantenedor-adjuntos"
+					emptyMessage="Sin Registros." editable="true" editMode="cell"
+					value="#{actividadMBean.actividadSelected.adjuntos}" var="filas"
+					rows="5" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15">
+					<p:ajax event="rowEdit" listener="#{actividadMBean.onRowEdit}" update="dt-tabla-mantenedor-adjuntos" />
+        			<p:ajax event="rowEditCancel" listener="#{actividadMBean.onRowCancel}" update="dt-tabla-mantenedor-adjuntos" />
+					<p:column headerText="Nombre Archivo" filterable="false" filterMatchMode="contains">
+						<h:outputText value="#{filas.nombreAdjunto}"> </h:outputText>
+					</p:column>
+					<p:column headerText="Descripci&oacute;n Archivo" filterable="false" filterMatchMode="contains">
+						<p:cellEditor>
+	                   		<f:facet name="output"><h:outputText value="#{filas.descripcionAdjunto}" /></f:facet>
+	                   		<f:facet name="input"><p:inputText id="modelInput" value="#{filas.descripcionAdjunto}" maxlength="100"/></f:facet>
+	               	   	</p:cellEditor>
+					</p:column>
+					<p:column headerText="Foto Archivo" filterable="false" filterMatchMode="contains">
+					<p:graphicImage value="#{filas.streamedContent}" stream="false" width="70" height="70"/>
+					</p:column>
+				</p:dataTable>
+			</p:fieldset>
+			<br/>
+			<h:panelGrid columns="3" cellpadding="5" style="margin: 0 auto;">
+				<p:commandButton value="Actualizar actividad" icon="ui-icon-disk"
+					update="form-modificar-actividad:growl"
+					action="#{actividadMBean.modificarActividad()}"
+					onstart="PF('dialogo-loading').show()"
+					onsuccess="PF('dialogo-loading').hide()" 
+					process="@this form-modificar-actividad:fs-modificar-Supervision,form-modificar-actividad:fs-modificar-Proyecto,form-modificar-actividad:fs-modificar-InicioActividad,form-modificar-actividad:fs-modificar-TerminoActividad,form-modificar-actividad:fs-modificar-EscalamientoAct,form-modificar-actividad:fs-modificar-Observaciones,form-modificar-actividad:fs-modificar-EscalamientoAct"/>
+			</h:panelGrid>
+		</h:form>
+	</p:panel>
+</html>

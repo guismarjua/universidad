@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="cacheEnabled" value="true"/>
+	</settings>
+
+	<typeAliases>
+		<package name="cl.valposystems.sgi.to" />
+  	</typeAliases> 
+
+	<environments default="development">
+        <environment id="development">
+          <transactionManager type="JDBC"/>
+            <!--  connecting to Local MySql -->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/hairsoftdb?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>
+                <property name="username" value="user"/>
+                <property name="password" value="pass"/>
+            </dataSource>
+       </environment>
+       
+        <environment id="produccion">
+          <transactionManager type="JDBC"/>
+            <!--  connecting to Local MySql -->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/SGI"/>
+                <property name="username" value="usersgi"/>
+                <property name="password" value="Sg1.vs"/>
+            </dataSource>
+       </environment>       
+    </environments>
+    
+    
+    
+  <mappers>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/usuario_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/sitio_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/proyecto_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/generic_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/ventana_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/actividad_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/login_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/actividad_proyecto_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/ventana_cliente_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/ventana_ito_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/ventana_proyecto_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/actividad_cliente_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/actividad_ito_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/actividad_ventanas_mapper.xml"/>
+  		<mapper resource="cl/valposystems/sgi/dao/xml/descarga_actividad_mapper.xml"/>
+  		
+  </mappers>
+  
+ 
+</configuration>

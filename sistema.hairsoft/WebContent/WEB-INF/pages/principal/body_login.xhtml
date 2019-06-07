@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+		
+
+<h:form id="login">
+	<p:dialog header="Identificaci&oacute;n"  widgetVar="dlg2" visible="true" closable="false" resizable="false" draggable="true">
+		<h:form id="login">
+			<div class="ui-grid ui-grid-responsive">
+			    <div class="ui-grid-row">
+			        <div class="ui-grid-col-2" style="width:115px;margin-top:10px;"><h:graphicImage library="img" value="resources/img/logo_hairsoft_mini2.png"
+						alt="Sephur" width="100" ></h:graphicImage></div>
+			        <div class="ui-grid-col-2">
+						<h:panelGrid columns="1" cellpadding="5" styleClass="ui-responsive">
+							<p:outputLabel for="rut" value="Rut: (Sin D&iacute;gito Verificador)" />
+							<p:inputText value="#{loginMBean.usuario.rutUsuario}"
+											id="rut"
+											required="true" placeholder="Rut Sin D&iacute;gito Verificador"
+											requiredMessage="Usuario es obligatorio"
+											maxlength="8" validatorMessage="El Rut debe ser numérico">
+								<f:validateRegex pattern="^[0-9]*$"/>
+							</p:inputText>
+							<p:outputLabel for="password" value="Password" />
+							<h:panelGrid columns="2" styleClass="ui-responsive">                                                    															    	
+								<p:password id="password" 
+									label="Password" required="true" maxlength="50" value="#{loginMBean.usuario.contrasenaUsuario}" requiredMessage="Password es obligatorio" title="Password"/>
+							</h:panelGrid>	
+							<p:commandButton action="#{loginMBean.login()}" value="Ingresar" update="messages" icon="ui-icon-check" ajax="false" />
+						</h:panelGrid>					        
+			        </div>
+			    </div>
+			</div>				
+			<p:messages id="messages" showSummary="false" showDetail="true" showIcon="true" closable="true" escape="false" />
+		</h:form>
+	</p:dialog>
+</h:form>
+
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<p:dialog id="dialogo-about" widgetVar="dialogo-about" header="Acerca de..." style="min-height:50px;height:auto !important;" resizable="false"  modal="true" closeOnEscape="true">
+			    <div class="ui-g">
+			    		<div class="ui-g-4">
+			        		<div style="width:110px;margin-top:2px;"><h:graphicImage library="img" value="resources/img/logo_hairsoft_mini2.png"
+						alt="Sephur" width="100" ></h:graphicImage></div>
+					</div>
+					<div class="ui-g-8">
+						<h:panelGrid columns="1" cellpadding="5" styleClass="ui-responsive" style="width:100%">
+							<h:outputText value="HairSoft" />
+							<h:outputText value="Versi&oacute;n: 1.0" />
+							<h:outputText value="Fecha de Versi&oacute;n: 2019" />
+							<h:outputText value="Todos los derechos reservados" />
+						</h:panelGrid>								
+					</div>	
+			    </div>			    
+	</p:dialog>
+</html>

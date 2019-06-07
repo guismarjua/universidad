@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.ActividadClienteMapper">
+
+	<select id="findAllActividadCliente" resultType="actividadClienteto">
+		SELECT DISTINCT (CONCAT(U.NOMBRE_USUARIO, ' ', U.APELLIDO_USUARIO)) AS nombreCliente, COUNT(A.ID_ACTIVIDAD) AS cantActivClie
+		FROM SGI_ACTIVIDAD A
+        INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+        INNER JOIN SGI_USUARIO U ON U.ID_USUARIO = P.ID_USUARIO
+        WHERE U.VIGENCIA = 1
+        <if test = "fechaInicio != null and fechaTermino != null">
+			AND A.FECHA_INICIO BETWEEN #{fechaInicio} and #{fechaTermino}
+		</if>
+		GROUP BY U.NOMBRE_USUARIO
+	</select>	
+</mapper>

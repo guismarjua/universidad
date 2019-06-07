@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.ActividadVentanasMapper">
+
+	<select id="findAllActividadesPorVentana" resultType="actividadventanasto">
+		SELECT VA.ID_VENTANA AS idVentana,
+		       VA.ID_ACTIVIDAD AS idActividad,
+		       A.CRQ AS crq,
+		       A.IMPACTO AS nivel,
+		       A.SINTESIS_ACTIVIDAD as detalleAct,
+		       A.FECHA_INICIO AS fechaInicio,
+		       A.FECHA_TERMINO AS fechaTermino,
+		       P.NOMBRE_PROYECTO AS nombreProyecto,
+		       A.ID_USUARIO as idIto,
+		       P.ID_USUARIO as idCliente,
+		       S.SITIO_SINERGIA AS sitio,
+               SE.STATUS_ESPECIFICOS as statusEspecifico,
+		       ST.STATUS as statusNoc
+		FROM SGI_VENTANA_ACTIVIDAD VA
+		INNER JOIN SGI_ACTIVIDAD A ON A.ID_ACTIVIDAD = VA.ID_ACTIVIDAD
+		INNER JOIN SGI_VENTANA V ON V.ID_VENTANA = VA.ID_VENTANA
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+		INNER JOIN SGI_SITIO S ON S.ID_SITIO = P.ID_SITIO
+		INNER JOIN SGI_STATUS ST ON ST.ID_STATUS = A.ID_STATUS	
+        LEFT JOIN SGI_STATUS_ESPECIFICOS SE ON A.ID_STATUS_ESPECIFICO = SE.ID_STATUS_ESPECIFICOS
+        WHERE VA.VIGENCIA = 1
+        AND A.FECHA_INICIO  BETWEEN #{fechaDesde} and #{fechaHasta}
+        AND A.FECHA_TERMINO BETWEEN #{fechaDesde} and #{fechaHasta}
+        ORDER BY V.FECHA_MODIFICACION DESC
+	</select>
+	
+		<select id="findAllTotalVentanaRango" resultType="actividadventanasto">
+		SELECT MONTH(V.FECHA_CREACION) AS parametros , COUNT(DISTINCT(VA.ID_VENTANA)) AS cantidadVentanaActv
+		FROM SGI_VENTANA V
+		INNER JOIN SGI_VENTANA_ACTIVIDAD VA ON VA.ID_VENTANA = V.ID_VENTANA
+		WHERE VA.VIGENCIA = 1
+		<if test = "annio != null ">
+			AND YEAR(V.FECHA_CREACION) = #{annio}
+			GROUP BY MONTH(V.FECHA_CREACION)
+		</if>
+	</select>
+</mapper>

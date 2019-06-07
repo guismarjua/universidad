@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	 
+	<p:dialog header="Detalle de Actividades por Ventana" widgetVar="dialog-detalle-ventana" id="dialog-detalle-ventana" modal="true" closeOnEscape="true">
+		<h:form id="form-detalle-ventana">
+		<p:growl id="growl" showDetail="true" life="3000" />
+			<p:fieldset legend="Asignar Actividades"> 
+				<p:pickList id="pick-lista-reglas" value="#{ventanaMBean.ventana.listaDualActividades}" filterMatchMode="contains" showSourceFilter="true" showTargetFilter="true" var="listaActividades" itemLabel=" #{listaActividades.idAct}-#{listaActividades.crqActividad}" itemValue="#{listaActividades.idActividad}" showCheckbox="true">
+				    <f:facet name="sourceCaption">Actividades Disponibles</f:facet>
+	        		<f:facet name="targetCaption">Actividades Asignadas</f:facet>
+	        		<p:ajax event="transfer" update=":panel-ventana, :form-tabla-gestion-ventana" listener="#{ventanaMBean.actualizarActividadVentana}" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+	        		<p:ajax event="reorder" update=":panel-ventana, :form-tabla-gestion-ventana" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+        		</p:pickList>
+			</p:fieldset>	
+			<h:panelGrid columns="2" cellpadding="5" style="margin: 0 auto;">
+				<p:commandButton value="Cerrar" icon="ui-icon-close" onclick="PF('dialog-detalle-ventana').hide();$('#form').trigger('reset');" type="button" />							
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+</html>

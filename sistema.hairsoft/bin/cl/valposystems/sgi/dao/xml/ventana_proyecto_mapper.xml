@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.VentanaProyectoMapper">
+
+	<select id="findAllVentanaProyecto" resultType="ventanaProyectoto">
+		SELECT DISTINCT(P.NOMBRE_PROYECTO) as nombreProyecto, P.FECHA_INICIO_PROY,P.FECHA_TERMINO_PROY, COUNT(DISTINCT(V.ID_VENTANA)) as cantidadVentana
+		FROM SGI_VENTANA V
+		INNER JOIN SGI_VENTANA_ACTIVIDAD VA ON VA.ID_VENTANA = V.ID_VENTANA
+		INNER JOIN SGI_ACTIVIDAD A ON A.ID_ACTIVIDAD = VA.ID_ACTIVIDAD
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+		WHERE VA.VIGENCIA = 1
+		<if test = "fechaBusquedaIni != null and fechaBusquedaFin != null">
+			AND V.FECHA_CREACION BETWEEN #{fechaBusquedaIni} and #{fechaBusquedaFin}
+		</if>
+		GROUP BY P.NOMBRE_PROYECTO
+	</select>	
+</mapper>

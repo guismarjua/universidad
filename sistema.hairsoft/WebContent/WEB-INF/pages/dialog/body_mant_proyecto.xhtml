@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	 
+	<p:dialog header="Mantenedor de Servicios" widgetVar="dialog-mantener-proyecto" id="dialog-mantener-proyecto" width="1200" style="min-height:250px;height:auto !important;" responsive="true"  modal="true" closeOnEscape="true">
+		<h:form id="form-mantenedor-proyecto">
+			<br/>
+			<p:fieldset legend="Agregar Servicio">
+				<h:panelGrid columns="6" cellpadding="5" style="width:100%;">
+					<h:outputText value="Nombre Servicio" style="font-weight:bold"/>	
+					<p:inputText value="#{proyectoMBean.proyecto.nombreProyecto}" maxlength="50" size="30" required="true" requiredMessage="Nombre Servicio debe ser obligatorio"/>
+					
+					<h:outputText value="Descripci&#243;n del Servicio*" style="font-weight:bold"/>	
+					<p:inputText value="#{proyectoMBean.proyecto.resumenProyecto}" maxlength="50" size="30" required="true" requiredMessage="Descripcion del Servicio debe ser obligatorio"/>
+
+					<!--<h:outputLabel value="Fecha Inicio*" style="font-weight:bold"/>
+						<p:calendar id="fecha-inicio" pattern="dd-MM-yyyy" value="#{proyectoMBean.proyecto.fechaInicio}"  required="true"  requiredMessage="Ingrese una Fecha de Inicio"
+									locale="es" size="20" readonlyInput="true" >
+								<p:ajax event="dateSelect" update="fecha-termino" />	
+						</p:calendar>
+	
+						<h:outputLabel value="Fecha T&eacute;rmino*" style="font-weight:bold"/>
+						<p:calendar id="fecha-termino" pattern="dd-MM-yyyy" value="#{proyectoMBean.proyecto.fechaTermino}"  required="true" requiredMessage="Ingrese una Fecha de T&eacute;rmino"
+									locale="es" size="20" readonlyInput="true" mindate="#{proyectoMBean.proyecto.fechaInicio}"></p:calendar>
+
+					<h:outputText value="Sitio*" style="font-weight:bold"/>	
+					<p:selectOneMenu id="selectOneMenu-seleccion-sitio"
+						value="#{proyectoMBean.proyecto.sitioSelected}" style="width:200px"
+						required="true"
+						requiredMessage="Es necesario indicar sitio" filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="Seleccione Sitio" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{proyectoMBean.proyecto.sitios}"
+							var="sitios" itemLabel="#{sitios.sitioSinergia} #{sitios.detalleUbicacionTecnica}"
+							itemValue="#{sitios.idSitio}" />
+					</p:selectOneMenu>
+					
+					<h:outputText value="Usuario*" style="font-weight:bold"/>
+					<p:selectOneMenu id="selectOneMenu-seleccion-usuario"
+						value="#{proyectoMBean.proyecto.usuarioSelected}" style="width:150px"
+						required="true"
+						requiredMessage="Es necesario indicar Cliente">
+							<f:selectItem itemLabel="Seleccione Cliente" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{proyectoMBean.proyecto.usuarios}"
+							var="usuarios" itemLabel="#{usuarios.nombreUsuario} #{usuarios.apellidoUsuario}"
+							itemValue="#{usuarios.idUsuario}" />
+					</p:selectOneMenu>-->
+									
+				</h:panelGrid>			
+				<br/>
+				<h:panelGrid columns="2" cellpadding="5" style="margin: 0 auto;">
+					<p:commandButton value="Aceptar" 
+										icon="ui-icon-disk" 
+										action="#{proyectoMBean.insertarProyecto()}"  
+										update="panel-proyecto, form-mantenedor-proyecto, :form-tabla-mantenedor-proyecto:dt-tabla-mantenedor-proyectos"
+										onstart="PF('dialogo-loading').show()" 
+										onsuccess="PF('dialogo-loading').hide()" />
+					<p:commandButton value="Cerrar" update="@form" proccess="@this" icon="ui-icon-close" onclick="PF('dialog-mantener-proyecto').hide();$('#form').trigger('reset');" type="button" >	
+						<p:ajax update="form-mantenedor-proyecto" resetValues="true" />
+					</p:commandButton>						
+				</h:panelGrid>
+			</p:fieldset>	
+			</h:form>
+		</p:dialog>
+</html>

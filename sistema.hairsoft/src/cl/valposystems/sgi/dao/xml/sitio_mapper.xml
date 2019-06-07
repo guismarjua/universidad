@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.SitiosMapper">
+
+	<select id="findAllSitios" resultType="sitioto">
+		SELECT S.ID_SITIO as idSitio,
+			   S.SITIO_INGENIERIA as sitioIngenieria, 
+			   S.SITIO_SINERGIA as sitioSinergia,
+			   S.UBICACION_TECNICA as ubicacionTecnica,
+			   S.DETALLE_UBIC_TEC as detalleUbicacionTecnica,
+			   S.ID_COMUNA AS identComuna, 
+			   S.ID_CLASIFICACION AS identClasificacion,
+			   R.ID_REGION AS identRegion,
+			   S.DIRECCION as direccion,
+			   C.NOMBRE_COMUNA as comuna,
+			   R.NOMBRE_REGION as region,
+			   CL.CLASIFICACION as clasificacion,
+			   S.VIGENCIA
+		FROM SGI_SITIO S
+		INNER JOIN SGI_COMUNA C ON C.ID_COMUNA = S.ID_COMUNA
+		INNER JOIN SGI_REGION R ON R.ID_REGION = C.ID_REGION
+		INNER JOIN SGI_CLASIFICACION CL ON CL.ID_CLASIFICACION = S.ID_CLASIFICACION
+		WHERE S.VIGENCIA = 1
+		ORDER BY S.ID_SITIO DESC;
+	</select>
+	
+	<update id="deleteSitio" parameterType="sitioto">
+		UPDATE SGI_SITIO
+		SET VIGENCIA = #{vigencia}
+		WHERE ID_SITIO = #{idSitio};
+	</update>
+	
+	<insert id="insertSitio" parameterType="sitioto">   	    	
+		INSERT INTO SGI_SITIO (SITIO_INGENIERIA, SITIO_SINERGIA, UBICACION_TECNICA, DETALLE_UBIC_TEC, DIRECCION, ID_COMUNA, ID_CLASIFICACION, VIGENCIA)
+		VALUES('NA', #{sitioSinergia}, #{ubicacionTecnica}, #{detalleUbicacionTecnica}, 'NA', 1, 1, 1)
+	</insert>
+	
+	<update id="updateSitio" parameterType="sitioto">			
+
+		UPDATE SGI_SITIO SET
+			SITIO_SINERGIA = #{sitioSinergia}, 
+			UBICACION_TECNICA = #{ubicacionTecnica}, 
+			DETALLE_UBIC_TEC = #{detalleUbicacionTecnica}
+			WHERE ID_SITIO = #{idSitio};
+	
+	</update>
+	
+	<select id="findSitioBySitioSinergia" resultType="java.lang.Integer" parameterType="sitioto">
+		SELECT COUNT(*) FROM SGI_SITIO WHERE SITIO_SINERGIA = #{sitioSinergia} AND VIGENCIA = 1
+	</select>
+	
+	<select id="findSitioById" resultType="sitioto" parameterType="java.lang.Integer">
+		SELECT S.SITIO_SINERGIA AS sitioSinergia
+		FROM SGI_SITIO S 
+		WHERE S.VIGENCIA = 1
+		AND S.ID_SITIO = #{id};
+	</select>
+	
+</mapper>

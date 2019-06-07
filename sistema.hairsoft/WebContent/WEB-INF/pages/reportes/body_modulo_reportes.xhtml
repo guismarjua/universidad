@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel id="panel-reportes" header="Reportes del Sistema"
+	rendered="#{routerMBean.body eq 'modulo-reportes'}">
+	
+	
+	<p:tabView id="tab-principal" >
+		
+		<p:tab id="tab-cant-act-proy" title="Gr&aacute;fico  Ventas/Profesional">
+		
+			<h:form>
+				<h:panelGrid columns="5" cellpadding="5" >
+					
+						<p:outputLabel value="Fecha Desde" />
+						<p:calendar id="calendar-fecha-desde" pattern="dd-MM-yyyy"
+							locale="es" size="10"
+							value="#{actividadProyectoMBean.listaActvFecha.fechaInicio}"
+							readonlyInput="true" navigator="true">
+							<p:ajax event="dateSelect" update="calendar-fecha-hasta-act-proy" />
+						</p:calendar>
+						<p:outputLabel value="Fecha Hasta" />
+						<p:calendar id="calendar-fecha-hasta-act-proy" pattern="dd-MM-yyyy"
+							locale="es" size="10"
+							value="#{actividadProyectoMBean.listaActvFecha.fechaTermino}"
+							readonlyInput="true"
+							mindate="#{actividadProyectoMBean.listaActvFecha.fechaInicio}"
+							navigator="true" />
+						<p:commandButton value="Buscar"
+							actionListener="#{actividadProyectoMBean.cargarGraficos()}"	
+							update="dt-tabla-actividad-proyecto chart-actividades-proyectos"											
+							icon="ui-icon-search"
+							onstart="PF('dialogo-loading').show()"
+							onsuccess="PF('dialogo-loading').hide()" />
+				</h:panelGrid>	
+				
+				<h:panelGrid columns="1" cellpadding="5" >
+					<div class="ui-g">
+						<div class="ui-g-12">						
+							<p:chart id="chart-actividades-proyectos" type="bar"  model="#{actividadProyectoMBean.model}" > </p:chart>						
+						</div>
+						<div class="ui-g-12"> 
+							<p:dataTable id="dt-tabla-actividad-proyecto"
+								widgetVar="dt-tabla-actividad-proyecto"
+								emptyMessage="Sin Registros." style="width:100%;"
+								value="#{actividadProyectoMBean.listaActv}" var="filas" rows="10"
+								paginator="true" paginatorPosition="bottom"
+								rowsPerPageTemplate="5,10,15" >
+								<f:facet name="header">
+									<div style="text-align: right">
+										<h:commandLink id="exportar-excel-actividad-proyecto"
+											rendered="true" style="margin-right:20px">
+											<p:graphicImage name="excel.png" library="img"
+												style="width:24px;height:24px;" />
+											<p:dataExporter type="xls" target="dt-tabla-actividad-proyecto"
+												fileName="detalle-actividad-proyecto" />
+										</h:commandLink>
+										<p:tooltip id="toolTip-excel-detalle-actividad-proyecto"
+											for="exportar-excel-actividad-proyecto"
+											value="Exportar a Excel" showEffect="fade" hideEffect="fade"
+											position="left" />
+									</div>
+								</f:facet>
+								<p:column headerText="Ventas">
+									<h:outputText value="#{filas.nombreProyecto}"></h:outputText>
+								</p:column>
+								<p:column headerText="Profesional" style="width:20%;">
+									<h:outputText value="#{filas.cantidadActv}"></h:outputText>
+								</p:column>
+							</p:dataTable>	
+						</div>
+					</div>	
+				</h:panelGrid>
+			</h:form>
+		</p:tab>
+
+		<p:tab id="tab-vent-clie" title="Gr&aacute;fico Ventas/Producto">
+			<h:form>
+				<h:panelGrid columns="5" cellpadding="5" >
+					
+					<h:outputText value="Fecha Desde" />
+					<p:calendar id="calendar-fecha-desde-vent-clie"
+						pattern="dd-MM-yyyy" locale="es" size="10"
+						value="#{ventanaClienteMBean.listaVentClieFech.fechaInicio}"
+						readonlyInput="true" navigator="true">
+						<p:ajax event="dateSelect" update="calendar-fecha-hasta-vent-clie" />
+					</p:calendar>
+					<h:outputText value="Fecha Hasta" />
+					<p:calendar id="calendar-fecha-hasta-vent-clie"
+						pattern="dd-MM-yyyy" locale="es" size="10"
+						value="#{ventanaClienteMBean.listaVentClieFech.fechaTermino}"
+						readonlyInput="true"
+						mindate="#{ventanaClienteMBean.listaVentClieFech.fechaInicio}"
+						navigator="true" />
+					<p:commandButton value="Buscar"
+						actionListener="#{ventanaClienteMBean.cargarGraficos()}"
+						update="dt-tabla-ventana-cliente chart-ventanas-clientes"
+						 icon="ui-icon-search"
+						onstart="PF('dialogo-loading').show()"
+						onsuccess="PF('dialogo-loading').hide()"/>
+						
+				</h:panelGrid>	
+				
+				<h:panelGrid columns="1" cellpadding="5" >
+					<div class="ui-g">
+						<div class="ui-g-12">													
+							<p:chart id="chart-ventanas-clientes" type="bar" model="#{ventanaClienteMBean.model}"></p:chart>							
+						</div>
+						<div class="ui-g-12"> 
+							<p:dataTable id="dt-tabla-ventana-cliente"
+								widgetVar="dt-tabla-ventana-cliente" emptyMessage="Sin Registros."
+								value="#{ventanaClienteMBean.listaVentClien}" var="filas"
+								rows="10" paginator="true" paginatorPosition="bottom"
+								rowsPerPageTemplate="5,10,15">
+								<f:facet name="header">
+									<div style="text-align: right">
+										<h:commandLink id="exportar-excel-ventana-cliente"
+											rendered="true" style="margin-right:20px">
+											<p:graphicImage name="excel.png" library="img"
+												style="width:24px;height:24px;" />
+											<p:dataExporter type="xls" target="dt-tabla-ventana-cliente"
+												fileName="detalle-ventana-cliente" />
+										</h:commandLink>
+										<p:tooltip id="toolTip-excel-detalle-ventana-cliente"
+											for="exportar-excel-ventana-cliente" value="Exportar a Excel"
+											showEffect="fade" hideEffect="fade" position="left" />
+									</div>
+								</f:facet>
+								<p:column headerText="Ventas">
+									<h:outputText value="#{filas.nombreUsuario}"></h:outputText>
+								</p:column>
+								<p:column headerText="Producto" style="width:20%;">
+									<h:outputText value="#{filas.cantidadVentana}"></h:outputText>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>	
+				</h:panelGrid>			
+			</h:form>
+		</p:tab>
+
+		<p:tab id="tab-vent-ito" title="Gr&aacute;fico Ventana/Ito">
+			<h:form>
+				<h:panelGrid columns="5" cellpadding="5" >
+					
+					<h:outputText value="Fecha Desde" />
+					<p:calendar id="calendar-fecha-desde-vent-ito" pattern="dd-MM-yyyy"
+						locale="es" size="10"
+						value="#{ventanaItoMBean.listaVenItoFecha.fechaInicio}"
+						readonlyInput="true" navigator="true">
+						<p:ajax event="dateSelect" update="calendar-fecha-hasta-vent-ito" />
+					</p:calendar>
+					<h:outputText value="Fecha Hasta" />
+					<p:calendar id="calendar-fecha-hasta-vent-ito" pattern="dd-MM-yyyy"
+						locale="es" size="10"
+						value="#{ventanaItoMBean.listaVenItoFecha.fechaTermino}"
+						readonlyInput="true"
+						mindate="#{ventanaItoMBean.listaVenItoFecha.fechaInicio}"
+						navigator="true" />
+					<p:commandButton value="Buscar"
+						actionListener="#{ventanaItoMBean.cargarGraficos()}"
+						update="dt-tabla-ventana-ito chart-ventanas-ito"
+						 icon="ui-icon-search"
+						onstart="PF('dialogo-loading').show()"
+						onsuccess="PF('dialogo-loading').hide()" />
+						
+				</h:panelGrid>	
+				
+				<h:panelGrid columns="1" cellpadding="5" >
+					<div class="ui-g">
+						<div class="ui-g-12">													
+							<p:chart id="chart-ventanas-ito" type="bar" model="#{ventanaItoMBean.model}"></p:chart>						
+						</div>
+						<div class="ui-g-12"> 
+							<p:dataTable id="dt-tabla-ventana-ito"
+								widgetVar="dt-tabla-ventana-ito" emptyMessage="Sin Registros."
+								value="#{ventanaItoMBean.listaVentIto}" var="filas" rows="10"
+								paginator="true" paginatorPosition="bottom"
+								rowsPerPageTemplate="5,10,15">
+								<f:facet name="header">
+									<div style="text-align: right">
+										<h:commandLink id="exportar-excel-ventana-ito" rendered="true"
+											style="margin-right:20px">
+											<p:graphicImage name="excel.png" library="img"
+												style="width:24px;height:24px;" />
+											<p:dataExporter type="xls" target="dt-tabla-ventana-ito"
+												fileName="detalle-ventana-ito" />
+										</h:commandLink>
+										<p:tooltip id="toolTip-excel-detalle-ventana-ito"
+											for="exportar-excel-ventana-ito" value="Exportar a Excel"
+											showEffect="fade" hideEffect="fade" position="left" />
+									</div>
+								</f:facet>
+								<p:column headerText="ITOS">
+									<h:outputText value="#{filas.nombreUsuario}"></h:outputText>
+								</p:column>
+								<p:column headerText="Ventanas" style="width:20%;">
+									<h:outputText value="#{filas.cantidadVentana}"></h:outputText>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>	
+				</h:panelGrid>	
+			</h:form>
+		</p:tab>
+		
+<!-- 		<p:tab id="tab-vent-proyecto" title="Gr&aacute;fico Ventana/Proyecto"> -->
+<!-- 			<h:form> -->
+<!-- 				<h:panelGrid columns="5" cellpadding="5" > -->
+					
+<!-- 					<h:outputText value="Fecha Desde" /> -->
+<!-- 					<p:calendar id="calendar-fecha-desde" pattern="dd-MM-yyyy" -->
+<!-- 						locale="es" size="10" -->
+<!-- 						value="#{ventanaProyectoMBean.ventProy.fechaBusquedaIni}" -->
+<!-- 						readonlyInput="true" navigator="true"> -->
+<!-- 						<p:ajax event="dateSelect" update="calendar-fecha-hasta-vent-proy" /> -->
+<!-- 					</p:calendar> -->
+<!-- 					<h:outputText value="Fecha Hasta" /> -->
+<!-- 					<p:calendar id="calendar-fecha-hasta-vent-proy" -->
+<!-- 						pattern="dd-MM-yyyy" locale="es" size="10" -->
+<!-- 						value="#{ventanaProyectoMBean.ventProy.fechaBusquedaFin}" -->
+<!-- 						readonlyInput="true" -->
+<!-- 						mindate="#{ventanaProyectoMBean.ventProy.fechaBusquedaIni}" -->
+<!-- 						navigator="true" /> -->
+<!-- 					<p:commandButton value="Buscar" -->
+<!-- 						actionListener="#{ventanaProyectoMBean.cargarGraficos()}" -->
+<!-- 						update="dt-tabla-ventana-proyecto chart-ventanas-proyecto" icon="ui-icon-search" -->
+<!-- 						onstart="PF('dialogo-loading').show()" -->
+<!-- 						onsuccess="PF('dialogo-loading').hide()" /> -->
+						
+<!-- 				</h:panelGrid>	 -->
+				
+<!-- 				<h:panelGrid columns="1" cellpadding="5" > -->
+<!-- 					<div class="ui-g"> -->
+<!-- 						<div class="ui-g-12">													 -->
+<!-- 							<p:chart id="chart-ventanas-proyecto" type="bar" model="#{ventanaProyectoMBean.model}"></p:chart> -->
+<!-- 						</div> -->
+<!-- 						<div class="ui-g-12">  -->
+<!-- 							<p:dataTable id="dt-tabla-ventana-proyecto" -->
+<!-- 								widgetVar="dt-tabla-ventana-proyecto" -->
+<!-- 								emptyMessage="Sin Registros." -->
+<!-- 								value="#{ventanaProyectoMBean.listaVentProy}" var="filas" -->
+<!-- 								rows="10" paginator="true" paginatorPosition="bottom" -->
+<!-- 								rowsPerPageTemplate="5,10,15"> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 									<div style="text-align: right"> -->
+<!-- 										<h:commandLink id="exportar-excel-ventana-proyecto" -->
+<!-- 											rendered="true" style="margin-right:20px"> -->
+<!-- 											<p:graphicImage name="excel.png" library="img" -->
+<!-- 												style="width:24px;height:24px;" /> -->
+<!-- 											<p:dataExporter type="xls" target="dt-tabla-ventana-proyecto" -->
+<!-- 												fileName="detalle-ventana-proyecto" /> -->
+<!-- 										</h:commandLink> -->
+<!-- 										<p:tooltip id="toolTip-excel-detalle-actividad-ito" -->
+<!-- 											for="exportar-excel-ventana-proyecto" value="Exportar a Excel" -->
+<!-- 											showEffect="fade" hideEffect="fade" position="left" /> -->
+<!-- 									</div> -->
+<!-- 								</f:facet> -->
+<!-- 								<p:column headerText="Nombre Proyecto"> -->
+<!-- 									<h:outputText value="#{filas.nombreProyecto}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 								<p:column headerText="Ventanas" style="width:15%;"> -->
+<!-- 									<h:outputText value="#{filas.cantidadVentana}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 							</p:dataTable> -->
+<!-- 						</div> -->
+<!-- 					</div>	 -->
+<!-- 				</h:panelGrid>	 -->
+<!-- 			</h:form> -->
+
+<!-- 		</p:tab> -->
+
+<!-- 		<p:tab id="tab-act-cliente" title="Gr&aacute;fico Actividad/Cliente"> -->
+
+<!-- 			<h:form> -->
+<!-- 				<h:panelGrid columns="5" cellpadding="5" > -->
+					
+<!-- 					<h:outputText value="Fecha Desde" /> -->
+<!-- 					<p:calendar id="calendar-fecha-desde-act-clie" pattern="dd-MM-yyyy" -->
+<!-- 						locale="es" size="10" -->
+<!-- 						value="#{actividadClienteMBean.listaActvClieFecha.fechaInicio}" -->
+<!-- 						readonlyInput="true" navigator="true"> -->
+<!-- 						<p:ajax event="dateSelect" update="calendar-fecha-hasta-act-clie" /> -->
+<!-- 					</p:calendar> -->
+<!-- 					<h:outputText value="Fecha Hasta" /> -->
+<!-- 					<p:calendar id="calendar-fecha-hasta-act-clie" pattern="dd-MM-yyyy" -->
+<!-- 						locale="es" size="10" -->
+<!-- 						value="#{actividadClienteMBean.listaActvClieFecha.fechaTermino}" -->
+<!-- 						readonlyInput="true" -->
+<!-- 						mindate="#{actividadClienteMBean.listaActvClieFecha.fechaInicio}" -->
+<!-- 						navigator="true" /> -->
+<!-- 					<p:commandButton value="Buscar" -->
+<!-- 						actionListener="#{actividadClienteMBean.cargarGraficos()}" -->
+<!-- 						update="dt-tabla-actividad-cliente chart-act-cliente" -->
+<!-- 						icon="ui-icon-search" -->
+<!-- 						onstart="PF('dialogo-loading').show()" -->
+<!-- 						onsuccess="PF('dialogo-loading').hide()" />				 -->
+<!-- 				</h:panelGrid>	 -->
+				
+<!-- 				<h:panelGrid columns="1" cellpadding="5" > -->
+<!-- 					<div class="ui-g"> -->
+<!-- 						<div class="ui-g-12">																				 -->
+<!-- 							<p:chart id="chart-act-cliente" type="bar" model="#{actividadClienteMBean.model}"></p:chart>												 -->
+<!-- 						</div> -->
+<!-- 						<div class="ui-g-12">  -->
+<!-- 							<p:dataTable id="dt-tabla-actividad-cliente" -->
+<!-- 								widgetVar="dt-tabla-actividad-cliente" -->
+<!-- 								emptyMessage="Sin Registros." -->
+<!-- 								value="#{actividadClienteMBean.listaActvClie}" var="filas" -->
+<!-- 								rows="10" paginator="true" paginatorPosition="bottom" -->
+<!-- 								rowsPerPageTemplate="5,10,15"> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 									<div style="text-align: right"> -->
+<!-- 										<h:commandLink id="exportar-excel-actividad-cliente" -->
+<!-- 											rendered="true" style="margin-right:20px"> -->
+<!-- 											<p:graphicImage name="excel.png" library="img" -->
+<!-- 												style="width:24px;height:24px;" /> -->
+<!-- 											<p:dataExporter type="xls" target="dt-tabla-actividad-cliente" -->
+<!-- 												fileName="detalle-actividad-cliente" /> -->
+<!-- 										</h:commandLink> -->
+<!-- 										<p:tooltip id="toolTip-excel-detalle-actividad-cliente" -->
+<!-- 											for="exportar-excel-actividad-cliente" value="Exportar a Excel" -->
+<!-- 											showEffect="fade" hideEffect="fade" position="left" /> -->
+<!-- 									</div> -->
+<!-- 								</f:facet> -->
+<!-- 								<p:column headerText="Clientes"> -->
+<!-- 									<h:outputText value="#{filas.nombreCliente}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 								<p:column headerText="Actividades" style="width:20%;"> -->
+<!-- 									<h:outputText value="#{filas.cantActivClie}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 							</p:dataTable>														 -->
+<!-- 						</div> -->
+<!-- 					</div>	 -->
+<!-- 				</h:panelGrid>	 -->
+<!-- 			</h:form> -->
+
+<!-- 		</p:tab> -->
+		
+<!-- 		<p:tab id="tab-act-ito" title="Gr&aacute;fico Actividad/Ito"> -->
+
+<!-- 			<h:form> -->
+<!-- 				<h:panelGrid columns="5" cellpadding="5" > -->
+					
+<!-- 					<h:outputText value="Fecha Desde" /> -->
+<!-- 					<p:calendar id="calendar-fecha-desde-actv-ito" pattern="dd-MM-yyyy" -->
+<!-- 						locale="es" size="10" -->
+<!-- 						value="#{actividadItoMBean.listaActvItoFecha.fechaInicio}" -->
+<!-- 						readonlyInput="true" navigator="true"> -->
+<!-- 						<p:ajax event="dateSelect" update="calendar-fecha-hasta-act-ito" /> -->
+<!-- 					</p:calendar> -->
+<!-- 					<h:outputText value="Fecha Hasta" /> -->
+<!-- 					<p:calendar id="calendar-fecha-hasta-act-ito" pattern="dd-MM-yyyy" -->
+<!-- 						locale="es" size="10" -->
+<!-- 						value="#{actividadItoMBean.listaActvItoFecha.fechaTermino}" -->
+<!-- 						readonlyInput="true" -->
+<!-- 						mindate="#{actividadItoMBean.listaActvItoFecha.fechaInicio}" -->
+<!-- 						navigator="true" /> -->
+<!-- 					<p:commandButton value="Buscar" -->
+<!-- 						actionListener="#{actividadItoMBean.cargarGraficos()}" -->
+<!-- 						 icon="ui-icon-search" -->
+<!-- 						 update="dt-tabla-actividad-ito chart-act-ito" -->
+<!-- 						onstart="PF('dialogo-loading').show()" -->
+<!-- 						onsuccess="PF('dialogo-loading').hide()" />			 -->
+<!-- 				</h:panelGrid>	 -->
+				
+<!-- 				<h:panelGrid columns="1" cellpadding="5" > -->
+<!-- 					<div class="ui-g"> -->
+<!-- 						<div class="ui-g-12">																				 -->
+<!-- 							<p:chart id="chart-act-ito" type="bar" model="#{actividadItoMBean.model}"></p:chart>												 -->
+<!-- 						</div> -->
+<!-- 						<div class="ui-g-12">  -->
+<!-- 							<p:dataTable id="dt-tabla-actividad-ito" -->
+<!-- 								widgetVar="dt-tabla-actividad-ito" emptyMessage="Sin Registros." -->
+<!-- 								value="#{actividadItoMBean.listaActvIto}" var="filas" rows="4" -->
+<!-- 								paginator="true" paginatorPosition="bottom" -->
+<!-- 								rowsPerPageTemplate="5,10,15"> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 									<div style="text-align: right"> -->
+<!-- 										<h:commandLink id="exportar-excel-actividad-ito" -->
+<!-- 											rendered="true" style="margin-right:20px"> -->
+<!-- 											<p:graphicImage name="excel.png" library="img" -->
+<!-- 												style="width:24px;height:24px;" /> -->
+<!-- 											<p:dataExporter type="xls" target="dt-tabla-actividad-ito" -->
+<!-- 												fileName="detalle-actividad-ito" /> -->
+<!-- 										</h:commandLink> -->
+<!-- 										<p:tooltip id="toolTip-excel-detalle-actividad-ito" -->
+<!-- 											for="exportar-excel-actividad-ito" value="Exportar a Excel" -->
+<!-- 											showEffect="fade" hideEffect="fade" position="left" /> -->
+<!-- 									</div> -->
+<!-- 								</f:facet> -->
+	
+<!-- 								<p:column headerText="ITOS"> -->
+<!-- 									<h:outputText value="#{filas.nombreIto}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 								<p:column headerText="Actividades" style="width:20%;"> -->
+<!-- 									<h:outputText value="#{filas.cantActivIto}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 							</p:dataTable>														 -->
+<!-- 						</div> -->
+<!-- 					</div>	 -->
+<!-- 				</h:panelGrid>	 -->
+<!-- 			</h:form> -->
+
+<!-- 		</p:tab> -->
+		
+<!-- 		<p:tab id="tab-vent-rango" title="Gr&aacute;fico Total Ventanas"> -->
+
+<!-- 			<h:form> -->
+<!-- 				<h:panelGrid columns="5" cellpadding="5" > -->
+					
+<!-- 					<h:outputText value="Seleccione un A&ntilde;o" /> -->
+<!-- 					<p:inputMask id="anno" value="#{ventanaRangoMBean.listaVentRangoFech.annio}" mask="9999" required="true" requiredMessage="Abreviatura debe ser obligatorio"/> -->
+<!-- 					<p:commandButton value="Buscar" -->
+<!-- 						actionListener="#{ventanaRangoMBean.cargarGraficos()}" -->
+<!-- 						icon="ui-icon-search" -->
+<!-- 						update="dt-tabla-ventana-rango-tiempo chart-ventanas-total" -->
+<!-- 						onstart="PF('dialogo-loading').show()" -->
+<!-- 						onsuccess="PF('dialogo-loading').hide()" />						 -->
+<!-- 				</h:panelGrid>	 -->
+				
+<!-- 				<h:panelGrid columns="1" cellpadding="5" > -->
+<!-- 					<div class="ui-g"> -->
+<!-- 						<div class="ui-g-12">													 -->
+<!-- 							<p:chart id="chart-ventanas-total" type="bar" model="#{ventanaRangoMBean.model}" /> -->
+<!-- 						</div> -->
+<!-- 						<div class="ui-g-12">  -->
+<!-- 							<p:dataTable id="dt-tabla-ventana-rango-tiempo" -->
+<!-- 								widgetVar="dt-tabla-ventana-proyecto" -->
+<!-- 								emptyMessage="Sin Registros." -->
+<!-- 								value="#{ventanaRangoMBean.listaVentRango}" var="filas" rows="10" -->
+<!-- 								paginator="true" paginatorPosition="bottom" -->
+<!-- 								rowsPerPageTemplate="5,10,15"> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 									<div style="text-align: right"> -->
+<!-- 										<h:commandLink id="exportar-excel-ventana-proyecto" -->
+<!-- 											rendered="true" style="margin-right:20px"> -->
+<!-- 											<p:graphicImage name="excel.png" library="img" -->
+<!-- 												style="width:24px;height:24px;" /> -->
+<!-- 											<p:dataExporter type="xls" target="dt-tabla-ventana-rango-tiempo" -->
+<!-- 												fileName="detalle-ventana-proyecto" /> -->
+<!-- 										</h:commandLink> -->
+<!-- 										<p:tooltip id="toolTip-excel-detalle-ventana-proyecto" -->
+<!-- 											for="exportar-excel-ventana-proyecto" value="Exportar a Excel" -->
+<!-- 											showEffect="fade" hideEffect="fade" position="left" /> -->
+<!-- 									</div> -->
+<!-- 								</f:facet> -->
+<!-- 								<p:column headerText="Mes" style="width:15%;"> -->
+<!-- 									<h:outputText value="#{filas.parametros}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 								<p:column headerText="Cantidad de Ventanas" style="width:15%;"> -->
+<!-- 									<h:outputText value="#{filas.cantidadVentanaActv}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 							</p:dataTable>							 -->
+<!-- 						</div> -->
+<!-- 					</div>	 -->
+<!-- 				</h:panelGrid>	 -->
+<!-- 			</h:form> -->
+<!-- 		</p:tab> -->
+				
+<!-- 		<p:tab id="tab-act-rango" title="Gr&aacute;fico Total Actividad"> -->
+		
+<!-- 			<h:form> -->
+<!-- 				<h:panelGrid columns="5" cellpadding="5" > -->
+					
+<!-- 					<h:outputText value="Seleccione un A&ntilde;o" /> -->
+<!-- 					<p:inputMask id="anno" value="#{actividadRangoMBean.listaActRangoFech.annio}" mask="9999" required="true" requiredMessage="Abreviatura debe ser obligatorio"/> -->
+<!-- 					<p:commandButton value="Buscar" -->
+<!-- 						actionListener="#{actividadRangoMBean.cargarGraficos()}" -->
+<!-- 						update="dt-tabla-actividad-rango chart-total-act" -->
+<!-- 						icon="ui-icon-search" -->
+<!-- 						onstart="PF('dialogo-loading').show()" -->
+<!-- 						onsuccess="PF('dialogo-loading').hide()"/>		 -->
+<!-- 				</h:panelGrid>	 -->
+<!-- 				<h:panelGrid columns="1" cellpadding="5" > -->
+<!-- 					<div class="ui-g"> -->
+<!-- 						<div class="ui-g-12">																				 -->
+<!-- 							<p:chart id="chart-total-act" type="bar" model="#{actividadRangoMBean.model}" />												 -->
+<!-- 						</div> -->
+<!-- 						<div class="ui-g-12">  -->
+<!-- 							<p:dataTable id="dt-tabla-actividad-rango" -->
+<!-- 								widgetVar="dt-tabla-actividad-rango" -->
+<!-- 								emptyMessage="Sin Registros." -->
+<!-- 								value="#{actividadRangoMBean.listaActRango}" var="filas" rows="5" -->
+<!-- 								paginator="true" paginatorPosition="bottom" -->
+<!-- 								rowsPerPageTemplate="5,10,15"> -->
+<!-- 								<f:facet name="header"> -->
+<!-- 									<div style="text-align: right"> -->
+<!-- 										<h:commandLink id="exportar-excel-actividad-rango" -->
+<!-- 											rendered="true" style="margin-right:20px"> -->
+<!-- 											<p:graphicImage name="excel.png" library="img" -->
+<!-- 												style="width:24px;height:24px;" /> -->
+<!-- 											<p:dataExporter type="xls" target="dt-tabla-actividad-rango" -->
+<!-- 												fileName="detalle-actividad-rango" /> -->
+<!-- 										</h:commandLink> -->
+<!-- 										<p:tooltip id="toolTip-excel-detalle-actividad-rango" -->
+<!-- 											for="exportar-excel-actividad-rango" value="Exportar a Excel" -->
+<!-- 											showEffect="fade" hideEffect="fade" position="left" /> -->
+<!-- 									</div> -->
+<!-- 								</f:facet> -->
+<!-- 								<p:column headerText="Mes" style="width:20%;"> -->
+<!-- 									<h:outputText value="#{filas.parametros}"> -->
+<!-- 										<f:convertDateTime pattern="dd-MM-yyyy" /> -->
+<!-- 									</h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 								<p:column headerText="Cantidad de Actividades" style="width:15%;"> -->
+<!-- 									<h:outputText value="#{filas.cantidadActv}"></h:outputText> -->
+<!-- 								</p:column> -->
+<!-- 							</p:dataTable>														 -->
+<!-- 						</div> -->
+<!-- 					</div>	 -->
+<!-- 				</h:panelGrid>	 -->
+<!-- 			</h:form>		 -->
+<!-- 		</p:tab>		 -->
+						
+	</p:tabView>
+	
+</p:panel>
+</html>

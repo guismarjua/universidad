@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="cl.valposystems.sgi.dao.mapper.ActividadMapper">
+
+	<select id="findAllActividades" resultType="actividadto">
+		SELECT A.ID_ACTIVIDAD
+		AS idActividad,
+		A.ID_ACT AS idAct,
+		A.CRQ AS crqActividad,
+		A.FECHA_CREACION AS fechaCreacion,
+		A.FECHA_MODIFICACION AS fechaModificacion,
+		P.NOMBRE_PROYECTO AS nombreProyecto,
+		P.ID_SITIO AS sitioSelected,
+		P.ID_PROYECTO AS proyectoSelected,
+		CA.ID_USUARIO AS usuarioPMSelected,
+		SA.ID_USUARIO AS usuarioSupervisorSelected
+		FROM SGI_ACTIVIDAD A
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+		INNER JOIN SGI_CLIENTE_ACTIVIDAD CA ON CA.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		INNER JOIN SGI_SUPERVISOR_ACTIVIDAD SA ON SA.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		ORDER BY A.ID_ACTIVIDAD DESC
+	</select>
+	
+	<select id="findAllActividadesIto" resultType="actividadto" parameterType="java.lang.Integer">
+		SELECT A.ID_ACTIVIDAD
+		AS idActividad,
+		A.ID_ACT AS idAct,
+		A.CRQ AS crqActividad,
+		A.FECHA_CREACION AS fechaCreacion,
+		A.FECHA_MODIFICACION AS fechaModificacion,
+		P.NOMBRE_PROYECTO AS nombreProyecto,
+		P.ID_SITIO AS sitioSelected,
+		P.ID_PROYECTO AS proyectoSelected,
+		CA.ID_USUARIO AS usuarioPMSelected,
+		SA.ID_USUARIO AS usuarioSupervisorSelected
+		FROM SGI_ACTIVIDAD A
+		INNER JOIN SGI_PROYECTO P ON P.ID_PROYECTO = A.ID_PROYECTO
+		INNER JOIN SGI_CLIENTE_ACTIVIDAD CA ON CA.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		INNER JOIN SGI_SUPERVISOR_ACTIVIDAD SA ON SA.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		WHERE A.ID_USUARIO = #{idUsuario}
+		ORDER BY A.ID_ACTIVIDAD DESC
+	</select>
+	
+	<select id="findAllActividadRango" resultType="actividadto">
+		SELECT COUNT(A.ID_ACTIVIDAD) AS CantidadActv, MONTH(A.FECHA_TERMINO) as parametros
+		FROM SGI_ACTIVIDAD A
+		<if test = "annio != null ">
+			WHERE YEAR(A.FECHA_TERMINO) = #{annio}
+			GROUP BY MONTH(A.FECHA_TERMINO)
+		</if>
+	</select>
+
+	<insert id="insertActividad" parameterType="actividadto">
+		INSERT INTO SGI_ACTIVIDAD(CRQ, ID_ACT, IMPACTO, SINTESIS_ACTIVIDAD,
+		FECHA_INICIO, FECHA_TERMINO, ESTADO_INICIO, ESTADO_TERMINO,
+		OPERADOR_INICIO, OPERADOR_TERMINO, ID_STATUS, ID_STATUS_ESPECIFICO,
+		ID_PROYECTO, ID_SITIO,
+		ID_USUARIO, ID_SUPERVISION, FECHA_CREACION)
+		VALUES(#{crqActividad}, #{idAct},
+		#{impactoActividad}, #{sintesisActividad}, #{fechaInicio},
+		#{fechaTermino}, #{estadoInicio},
+		#{estadoTermino}, #{operadorInicio}, #{operadorTermino}, #{idStatus},
+		#{idStatusEspecifico},
+		#{idProyecto}, #{idSitio}, #{idUsuario}, #{idSupervision}, SYSDATE())
+	</insert>
+
+	<update id="editActividad" parameterType="actividadto">
+		UPDATE SGI_ACTIVIDAD
+		SET CRQ = #{crqActividad},
+		ID_ACT = #{idAct},
+		IMPACTO = #{impactoActividad},
+		SINTESIS_ACTIVIDAD = #{sintesisActividad},
+		FECHA_INICIO = #{fechaInicio},
+		FECHA_TERMINO = #{fechaTermino},
+		ESTADO_INICIO = #{estadoInicio},
+		ESTADO_TERMINO = #{estadoTermino},
+		OPERADOR_INICIO = #{operadorInicio},
+		OPERADOR_TERMINO = #{operadorTermino},
+		ID_STATUS = #{idStatus},
+		ID_STATUS_ESPECIFICO = #{idStatusEspecifico},
+		ID_PROYECTO = #{idProyecto},
+		ID_SITIO = #{idSitio},
+		ID_USUARIO = #{idUsuario},
+		ID_SUPERVISION = #{idSupervision},
+		FECHA_MODIFICACION = SYSDATE()
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</update>
+
+	<select id="findIdActividad" resultType="java.lang.Integer"
+		parameterType="actividadto">
+		SELECT ID_ACTIVIDAD
+		FROM SGI_ACTIVIDAD
+		WHERE CRQ =
+		#{crqActividad} AND ID_ACT = #{idAct}
+		ORDER BY ID_ACTIVIDAD DESC
+		LIMIT 1
+	</select>
+
+	<insert id="insertPersonalPM" parameterType="java.util.Map">
+		INSERT INTO SGI_CLIENTE_ACTIVIDAD(VIGENCIA, ID_ACTIVIDAD, ID_USUARIO)
+		VALUES(1,#{idActividad},#{idUsuario})
+	</insert>
+
+	<update id="modificarPersonalPM" parameterType="java.util.Map">
+		UPDATE SGI_CLIENTE_ACTIVIDAD
+		SET ID_USUARIO = #{idUsuario}
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</update>
+
+	<insert id="insertPersonalSupervisor"
+		parameterType="java.util.Map">
+		INSERT INTO SGI_SUPERVISOR_ACTIVIDAD(VIGENCIA, ID_ACTIVIDAD, ID_USUARIO)
+		VALUES(1,#{idActividad},#{idUsuario})
+	</insert>
+	
+	<update id="modificarPersonalSupervisor" parameterType="java.util.Map">
+		UPDATE SGI_SUPERVISOR_ACTIVIDAD
+		SET ID_USUARIO = #{idUsuario}
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</update>
+
+	<insert id="insertEscalamiento" parameterType="java.util.Map">
+		INSERT INTO SGI_ESCALAMIENTO(NIVEL, NOMBRE, TELEFONO, CORREO, ID_ACTIVIDAD)
+		VALUES(#{nivel},#{nombre},#{telefono},#{correo},#{idActividad})
+	</insert>
+
+	<insert id="insertObservaciones" parameterType="java.util.Map">
+		INSERT INTO SGI_TAREAS(DESCRIPCION, ID_ACTIVIDAD)
+		VALUES(#{observaciones},#{idActividad})
+	</insert>
+
+	<insert id="insertProveedores" parameterType="java.util.Map">
+		INSERT INTO SGI_INFORMACION_PROVEEDOR(NOMBRE, EMPRESA, CARGO, EMAIL,
+		TELEFONO, VIGENCIA, ID_ACTIVIDAD)
+		VALUES(#{nombreProveedor},#{empresaProveedor},#{cargoProveedor},#{correoProveedor},#{fonoProveedor},#{vigencia},#{idActividad})
+	</insert>
+
+	<insert id="insertAdjuntos" parameterType="java.util.Map">
+		INSERT INTO SGI_IMAGENES(NOMBRE, DESCRIPCION, URL, VIGENCIA, ID_ACTIVIDAD)
+		VALUES(#{nombreAdjunto},#{descripcionAdjunto},#{urlAdjunto},#{vigencia},#{idActividad})
+	</insert>
+
+	<select id="findDataActividad" parameterType="actividadto"
+		resultType="actividadto">
+		SELECT A.ID_ACTIVIDAD as idActividad,
+		A.CRQ as crqActividad,
+		A.ID_ACT as idAct,
+		A.IMPACTO as impactoActividad,
+		A.SINTESIS_ACTIVIDAD as sintesisActividad,
+		A.FECHA_INICIO as fechaInicio,
+		A.FECHA_TERMINO as fechaTermino,
+		A.ESTADO_INICIO as estadoInicio,
+		A.ESTADO_TERMINO as estadoTermino,
+		A.OPERADOR_INICIO as operadorInicio,
+		A.OPERADOR_TERMINO as operadorTermino,
+		A.ID_STATUS as idStatus,
+		A.ID_STATUS_ESPECIFICO as idStatusEspecifico,
+		A.ID_PROYECTO as idProyecto,
+		A.ID_SITIO as idSitio,
+		A.ID_USUARIO as idUsuario,
+		A.ID_SUPERVISION as idSupervision,
+		CA.ID_USUARIO AS usuarioPMSelected,
+		SA.ID_USUARIO AS usuarioSupervisorSelected,
+		T.DESCRIPCION AS observacionActividad
+		FROM SGI_ACTIVIDAD A
+		INNER JOIN
+		SGI_CLIENTE_ACTIVIDAD CA ON CA.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		INNER JOIN
+		SGI_SUPERVISOR_ACTIVIDAD SA ON SA.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		INNER
+		JOIN SGI_TAREAS T ON T.ID_ACTIVIDAD = A.ID_ACTIVIDAD
+		WHERE
+		A.ID_ACTIVIDAD = #{idActividad}
+
+
+	</select>
+	
+	<update id="modificarVigenciaProveedores" parameterType="java.util.Map">
+		UPDATE SGI_INFORMACION_PROVEEDOR
+		SET VIGENCIA = #{vigencia}
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</update>
+	
+	<update id="modificarVigenciaAdjuntos" parameterType="java.util.Map">
+		UPDATE SGI_IMAGENES
+		SET VIGENCIA = #{vigencia}
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</update>
+	
+	<update id="modificarObservaciones" parameterType="java.util.Map">
+		UPDATE SGI_TAREAS
+		SET DESCRIPCION = #{observaciones}
+		WHERE ID_ACTIVIDAD = #{idActividad}
+	</update>
+	
+	<update id="modificarEscalamiento" parameterType="java.util.Map">
+		UPDATE SGI_ESCALAMIENTO
+		SET NIVEL = #{nivel},
+		NOMBRE = #{nombre},
+		TELEFONO = #{telefono},
+		CORREO = #{correo}
+		WHERE ID_ACTIVIDAD = #{idActividad} AND ID_ESCALAMIENTO = #{idEscalamiento}
+	</update>
+
+	<select id="buscarIdEscalamiento" parameterType="java.lang.Integer"
+		resultType="escalamientoto">
+		SELECT E.ID_ESCALAMIENTO as idEscalamiento
+		FROM SGI_ESCALAMIENTO E
+		WHERE E.ID_ACTIVIDAD = #{idActividad}
+		ORDER BY E.ID_ESCALAMIENTO ASC
+	</select>
+	
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+  
+	<p:panel id="panel-ver-actividad" header="Visualizador de Actividades" rendered="#{routerMBean.body eq 'ver-actividad'}" >
+		<h:form id="form-tabla-ver-actividad" >
+		<p:dataTable id="dt-tabla-ver-actividad" widgetVar="dt-tabla-ver-actividad"
+					emptyMessage="Sin Registros."
+					value="#{actividadMBean.listaActividades}" var="filas"
+					rows="25" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="25,50,100">
+					<p:column headerText="ID" filterable="true" filterBy="#{filas.idActividad}" filterMatchMode="contains" style="width:40px">
+						<h:outputText value="#{filas.idActividad}"> </h:outputText>
+					</p:column>
+					<p:column headerText="ID Acceso" filterable="true" filterBy="#{filas.idAct}" filterMatchMode="contains">
+						<h:outputText value="#{filas.idAct}"> </h:outputText>
+					</p:column>
+					<p:column headerText="CRQ" filterable="true" filterBy="#{filas.crqActividad}" filterMatchMode="contains">
+						<h:outputText value="#{filas.crqActividad}"></h:outputText>
+					</p:column>
+					<p:column headerText="Fecha Creaci&#243;n" filterable="true" filterBy="#{filas.fechaCreacion}" filterMatchMode="contains">
+						<h:outputText value="#{filas.fechaCreacion}">
+							<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Fecha Modificaci&#243;n" filterable="true" filterBy="#{filas.fechaModificacion}" filterMatchMode="contains">
+						<h:outputText value="#{filas.fechaModificacion}">
+							<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Nombre Proyecto" filterable="true" filterBy="#{filas.nombreProyecto}" filterMatchMode="contains">
+						<h:outputText value="#{filas.nombreProyecto}"></h:outputText>
+					</p:column>
+					<p:column headerText="Descargar"  style="width:40px;text-align: center">
+		             	<p:commandButton id="actividad-generar" 
+		 	 							 icon="ui-icon-arrowthickstop-1-s"
+		 	 							 actionListener="#{descargaActividadMBean.certificadoPorActividad(filas)}"
+		 	 							 ajax="false"
+							 			 onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()" />
+							 			 
+		        	</p:column>
+					<p:column headerText="Editar"  style="width:32px;text-align: center" rendered="#{loginMBean.role != 'MANAGER'}">
+		             	<p:commandButton actionListener="#{routerMBean.modificarActividad(filas)}" update=":form-menu-principal,:general" icon="ui-icon-pencil" title="Ver" onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+		        	</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</html>

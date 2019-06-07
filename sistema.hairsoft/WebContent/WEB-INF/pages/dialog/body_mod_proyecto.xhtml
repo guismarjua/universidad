@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:dialog id="dialogo-modificar-proyecto"  onShow="true" widgetVar="dlg-modificar-proyecto" header="Modificar Servicio"  width="1000" style="min-height:250px;height:auto !important;" responsive="true"  modal="true" closeOnEscape="true">
+		<h:form id="form-dlg-modificar-proyecto">
+			<br/>		
+   			<p:fieldset legend="Modificar Servicio">
+				<h:panelGrid columns="6" cellpadding="5" style="width:100%;">
+					<h:outputText value="Nombre Servicio*" style="font-weight:bold"/>	
+					<p:inputText value="#{proyectoMBean.proyectoSelected.nombreProyecto}" maxlength="100" size="30" required="true" requiredMessage="Nombre Servicio debe ser obligatorio"/>
+					
+					<h:outputText value="Descripci&#243;n del Servicio*" style="font-weight:bold"/>	
+					<p:inputText value="#{proyectoMBean.proyectoSelected.resumenProyecto}" maxlength="100" size="30" required="true" requiredMessage="Descripcion del Servicio debe ser obligatorio"/>
+									
+				</h:panelGrid>				
+				<br/>
+				<h:panelGrid columns="2" cellpadding="3" style="margin: 0 auto;">
+					<p:commandButton value="Guardar Cambios" 
+										icon="ui-icon-disk" 
+										action="#{proyectoMBean.modificarProyecto()}"  
+										update="panel-proyecto, form-dlg-modificar-proyecto, :form-tabla-mantenedor-proyecto:dt-tabla-mantenedor-proyectos"
+										onstart="PF('dialogo-loading').show()" 
+										oncomplete="PF('dialogo-loading').hide()" >
+					</p:commandButton>
+					<p:commandButton value="Cerrar" icon="ui-icon-close" update="@form" proccess="@this" onclick="PF('dlg-modificar-proyecto').hide();$('#form').trigger('reset');" type="button" >							
+						<p:ajax update="form-dlg-modificar-proyecto" resetValues="true" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:fieldset>	
+		</h:form>
+	</p:dialog>
+</html>

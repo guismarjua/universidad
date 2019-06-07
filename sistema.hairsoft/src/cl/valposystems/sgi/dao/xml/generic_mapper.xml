@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.GenericMapper">
+
+	<select id="findAllRoles" resultType="rolto">
+		SELECT R.ID_ROL as rolId,
+			   R.ROL as rol, 
+			   R.VIGENCIA as vigencia
+		FROM SGI_ROL R	    
+		WHERE R.VIGENCIA = 1;
+	</select>
+	
+	<select id="findAllRegiones" resultType="regionto">
+			SELECT RE.ID_REGION as idRegion, 
+				   RE.NOMBRE_REGION as nombreRegion, 
+				   RE.NUMERO_REGION as numeroRegion, 
+				   RE.VIGENCIA as vigencia
+			FROM SGI_REGION RE 
+			where RE.Vigencia=1;
+	</select>
+	
+	<select id="findAllComunas" parameterType="java.lang.Integer" resultType="comunato">
+		SELECT CO.ID_COMUNA as idComuna, 
+			   CO.NOMBRE_COMUNA as nombreComuna,
+			   CO.ID_REGION as idRegion,
+			   CO.VIGENCIA as vigencia
+		FROM SGI_COMUNA CO
+		WHERE CO.VIGENCIA = 1
+		AND CO.ID_REGION = #{id};
+	</select>
+	
+	<select id="findAllClasificaciones" resultType="clasificacionto">
+		SELECT CL.ID_CLASIFICACION as idClasificacion,
+			   CL.CLASIFICACION as clasificacion,
+			   CL.VIGENCIA as vigencia
+	    FROM SGI_CLASIFICACION CL
+		WHERE CL.VIGENCIA = 1;
+	</select>
+	
+	<select id="findAllUsuarios" resultType="usuarioto">
+		SELECT U.ID_USUARIO as idUsuario, 
+			   U.NOMBRE_USUARIO as nombreUsuario,
+			   U.APELLIDO_USUARIO as apellidoUsuario, 
+			   U.ABREVIATURA_USUARIO as abreviaturaUsuario, 
+			   U.TELEFONO_USUARIO as telefonoUsuario, 
+			   U.EMAIL_USUARIO as emailUsuario, 
+			   U.RUT_USUARIO as rutUsuario, 
+			   U.DV_USUARIO as rutUsuario, 
+			   U.CONTRASENA as contrasenaUsuario, 
+			   U.CARGO_USUARIO as cargoUsuario, 
+			   U.SKYPE_USUARIO as skypeUsuario, 
+			   U.VIGENCIA as vigenciaUsuario, 
+			   U.ID_ROL as idRol
+			   FROM SGI_USUARIO U
+			   WHERE U.VIGENCIA = 1
+			   AND U.ID_ROL = (SELECT ID_ROL FROM SGI_ROL WHERE ROL = 'CLIENTE')
+			   
+	</select>
+	
+	<select id="findAllSitios" resultType="sitioto">
+		SELECT SI.ID_SITIO as idSitio, 
+			   SI.SITIO_SINERGIA AS sitioSinergia,
+			   SI.DETALLE_UBIC_TEC as detalleUbicacionTecnica
+			   FROM SGI_SITIO SI
+			   WHERE SI.VIGENCIA = 1;
+	</select>
+	
+	<select id="findSitioActividad" resultType="sitioto" parameterType="java.lang.Integer">
+		SELECT SI.ID_SITIO as idSitio, 
+			   SI.SITIO_SINERGIA AS sitioSinergia,
+			   SI.DETALLE_UBIC_TEC as detalleUbicacionTecnica
+			   FROM SGI_SITIO SI
+			   WHERE SI.ID_SITIO = #{idSitio}
+			   AND SI.VIGENCIA = 0;
+	</select>
+	
+	<select id="findAllProyectos" resultType="proyectoto">
+		SELECT P.ID_PROYECTO as idProyecto,
+			   P.NOMBRE_PROYECTO as nombreProyecto
+	    FROM SGI_PROYECTO P
+		WHERE P.VIGENCIA = 1;
+	</select>
+	
+	<select id="findProyectoActividad" resultType="proyectoto" parameterType="java.lang.Integer">
+		SELECT P.ID_PROYECTO as idProyecto,
+			   P.NOMBRE_PROYECTO as nombreProyecto
+	    FROM SGI_PROYECTO P
+		WHERE P.ID_PROYECTO = #{idProyecto}
+		AND P.VIGENCIA = 0;
+	</select>
+	
+	<select id="findAllSupervisiones" resultType="supervisionto">
+		SELECT S.ID_SUPERVISION as idSupervision,
+			   S.SUPERVISION as supervision
+	    FROM SGI_SUPERVISION S
+		WHERE S.VIGENCIA = 1;
+	</select>
+	
+	<select id="findAllStatus" resultType="statusto">
+		SELECT ST.ID_STATUS as idStatus,
+			   ST.STATUS as status
+	    FROM SGI_STATUS ST
+		WHERE ST.VIGENCIA = 1;
+	</select>
+	
+	<select id="findAllStatusEspecificos" parameterType="java.lang.Integer" resultType="statusespecificosto">
+		SELECT ST.ID_STATUS_ESPECIFICOS as idStatusEspecificos,
+			   ST.STATUS_ESPECIFICOS as statusEspecificos,
+			   ST.ID_STATUS as idStatus
+	    FROM SGI_STATUS_ESPECIFICOS ST
+		WHERE ST.VIGENCIA = 1 AND ST.ID_STATUS = #{valor};
+	</select>
+	
+	<select id="findAllClientes" resultType="usuarioto">
+		SELECT U.ID_USUARIO AS idUsuario,
+			   U.NOMBRE_USUARIO AS nombreUsuario,
+			   U.APELLIDO_USUARIO AS apellidoUsuario
+		FROM SGI_USUARIO U
+		WHERE ID_ROL = (SELECT ID_ROL FROM SGI_ROL WHERE ROL = 'CLIENTE')
+		AND VIGENCIA = 1
+		
+	</select>
+	
+	
+	<select id="findClienteActividad" resultType="usuarioto" parameterType="java.lang.Integer">
+		SELECT U.ID_USUARIO AS idUsuario,
+			   U.NOMBRE_USUARIO AS nombreUsuario,
+			   U.APELLIDO_USUARIO AS apellidoUsuario
+		FROM SGI_USUARIO U
+		WHERE U.ID_USUARIO = #{idUsuario}
+		AND U.VIGENCIA = 0
+		
+	</select>
+	
+	<select id="findUsuariosEscalamiento" resultType="usuarioto">
+		SELECT U.ID_USUARIO AS idUsuario,
+			   U.NOMBRE_USUARIO AS nombreUsuario,
+			   U.APELLIDO_USUARIO AS apellidoUsuario
+		FROM SGI_USUARIO U
+		WHERE U.ID_ROL IN (SELECT ID_ROL FROM SGI_ROL WHERE ROL IN ('CLIENTE', 'ADMIN'))
+		and U.VIGENCIA = 1
+	</select>
+	
+	<select id="findDataClientes" parameterType="java.lang.Integer" resultType="usuarioto">
+		SELECT U.TELEFONO_USUARIO AS telefonoUsuario,
+			   U.EMAIL_USUARIO AS emailUsuario,
+			   U.CARGO_USUARIO AS cargoUsuario
+		FROM SGI_USUARIO U
+		WHERE U.ID_USUARIO = #{idUsuario}
+	</select>
+	
+	<select id="findEscalamiento" parameterType="java.lang.Integer" resultType="escalamientoto">
+		SELECT E.ID_ESCALAMIENTO AS idEscalamiento,
+			   E.NIVEL AS nivel,
+			   E.NOMBRE AS nombre,
+			   E.TELEFONO AS telefono,
+			   E.CORREO AS correo
+		FROM SGI_ESCALAMIENTO E
+		WHERE E.ID_ACTIVIDAD = #{idActividad}
+		ORDER BY E.ID_ESCALAMIENTO ASC
+	</select>
+	
+	<select id="findProveedor" parameterType="java.lang.Integer" resultType="proveedorto">
+		SELECT IP.NOMBRE AS nombreProveedor,
+		IP.EMPRESA AS empresaProveedor,
+		IP.CARGO AS cargoProveedor,
+		IP.TELEFONO AS fonoProveedor,
+		IP.EMAIL AS correoProveedor
+		FROM SGI_INFORMACION_PROVEEDOR IP
+		WHERE IP.ID_ACTIVIDAD = #{idActividad} AND IP.VIGENCIA = 1
+	</select>
+	
+	<select id="findAdjunto" parameterType="java.lang.Integer" resultType="adjuntoto">
+		SELECT I.NOMBRE AS nombreAdjunto,
+		I.DESCRIPCION AS descripcionAdjunto,
+		I.URL AS urlAdjunto
+		FROM SGI_IMAGENES I
+		WHERE I.ID_ACTIVIDAD = #{idActividad} AND I.VIGENCIA = 1
+	</select>
+	
+	<select id="findAlias" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT U.ABREVIATURA_USUARIO
+		FROM SGI_USUARIO U
+		WHERE U.ID_USUARIO = #{idUsuario}
+	</select>
+	
+	<select id="findStatusEspecifico" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT SE.STATUS_ESPECIFICOS
+		FROM SGI_STATUS_ESPECIFICOS SE
+		WHERE SE.ID_STATUS_ESPECIFICOS = #{idStatusEspecifico}
+	</select>
+	
+	<select id="findUsuarioSeleccionado" parameterType="java.lang.Integer" resultType="usuarioto">
+		SELECT U.ID_USUARIO AS idUsuario,
+			   U.NOMBRE_USUARIO AS nombreUsuario,
+			   U.APELLIDO_USUARIO AS apellidoUsuario
+		FROM SGI_USUARIO U
+		WHERE U.ID_USUARIO = #{idUsuario}
+		AND VIGENCIA = 0
+	</select>
+	
+	<select id="findProyectoSeleccionado" parameterType="java.lang.Integer" resultType="proyectoto">
+		SELECT P.ID_PROYECTO as idProyecto,
+			   P.NOMBRE_PROYECTO as nombreProyecto
+	    FROM SGI_PROYECTO P
+		WHERE P.ID_PROYECTO = #{idProyecto}
+		AND P.VIGENCIA = 0;
+	</select>
+	
+	<select id="findSitioSeleccionado" parameterType="java.lang.Integer" resultType="sitioto">
+		SELECT SI.ID_SITIO as idSitio, 
+			   SI.SITIO_SINERGIA AS sitioSinergia,
+			   SI.DETALLE_UBIC_TEC as detalleUbicacionTecnica
+			   FROM SGI_SITIO SI
+			   WHERE SI.ID_SITIO = #{idSitio}
+			   AND SI.VIGENCIA = 0;
+	</select>
+	
+	<select id="preloadComunas" parameterType="java.lang.Integer" resultType="comunato">
+		SELECT ID_COMUNA AS idComuna,
+			   NOMBRE_COMUNA AS nombreComuna
+		FROM SGI_COMUNA 
+		WHERE ID_REGION = #{idRegion}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cl.valposystems.sgi.dao.mapper.UsuariosMapper">
+
+	<select id="findAllClientes" resultType="clienteto">
+		SELECT 
+			ID_CLIENTE AS idCliente, 
+			RUT AS rutCliente, 
+			NOM_CLIENTE AS nombreCliente, 
+			TELEFONO AS telefonoCliente, 
+			E_MAIL AS emailCliente, 
+			FECHA_NAC AS fechaNacCliente, 
+			ALERGIAS AS alergias
+		FROM clientes;
+	</select>
+	
+	<update id="deleteUsuario" parameterType="usuarioto">
+		UPDATE USUARIO
+		SET VIGENCIA = #{vigenciaUsuario}
+		WHERE ID_USUARIO = #{idUsuario};
+	</update>
+	
+	<insert id="insertUsuario" parameterType="usuarioto">    	
+		INSERT INTO cliente (RUT, NOM_CLIENTE, TELEFONO, E_MAIL, FECHA_NAC, ALERGIAS)
+		VALUES(#{rutCliente}, #{nombreCliente}, '#{telefonoCliente}', #{emailCliente}, #{fechaNacCliente}, #{alergias})
+	</insert>
+	
+	<update id="updateUsuario" parameterType="usuarioto">
+		UPDATE USUARIO 
+			<set>
+				NOMBRE_USUARIO = #{nombreUsuario},
+				APELLIDO_USUARIO = #{apellidoUsuario},
+				ABREVIATURA_USUARIO = #{abreviaturaUsuario}, 
+				TELEFONO_USUARIO = #{telefonoUsuario}, 
+				EMAIL_USUARIO = #{emailUsuario},
+				RUT_USUARIO = #{rutUsuario},
+				DV_USUARIO = #{dvUsuario},   
+				<if test="contrasenaUsuario != null and contrasenaUsuario != '' ">CONTRASENA = #{contrasenaUsuario},</if>
+				CARGO_USUARIO = #{cargoUsuario},
+				SKYPE_USUARIO =  #{skypeUsuario},
+				ID_ROL = #{identRol}
+			</set>
+		WHERE
+			ID_USUARIO = #{idUsuario}
+	</update>
+	
+	<select id="findUsuarioByRut" parameterType="usuarioto" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM USUARIO WHERE RUT_USUARIO = #{rutUsuario} AND DV_USUARIO = #{dvUsuario} AND VIGENCIA = 1
+	</select>
+	
+	<select id="findUsuarioById" parameterType="java.lang.Integer" resultType="usuarioto">
+		SELECT U.RUT_USUARIO as rutUsuario,
+			   U.DV_USUARIO as dvUsuario
+		FROM USUARIO U 
+		WHERE U.VIGENCIA = 1
+		AND U.ID_USUARIO = #{id};
+	</select>
+
+</mapper>

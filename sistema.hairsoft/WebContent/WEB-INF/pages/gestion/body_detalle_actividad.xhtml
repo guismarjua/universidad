@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel id="panel-ver-detalle-actividad" header="Reporte de Actividades Asociadas a Ventanas" rendered="#{routerMBean.body eq 'detalle-actividad'}" >
+		<p:panel id="panel-filtro-fechas">
+			<h:form id="form-filtro-fechas">
+			<p:growl id="growl" showDetail="true" life="3000" /> 
+				<h:panelGrid columns="6" cellpadding="2" style="width:60%;">
+					<h:outputLabel value="Desde*" style="font-weight:bold"/>
+					<p:calendar id="fecha-inicio" pattern="dd-MM-yyyy" value="#{actividadVentanasMBean.actVentanas.fechaDesde}"  required="true"  requiredMessage="Ingrese una Fecha de Inicio"
+								locale="es" size="20" readonlyInput="true" >
+							<p:ajax event="dateSelect" update="fecha-termino" />	
+					</p:calendar>
+	
+					<h:outputLabel value="Hasta*" style="font-weight:bold"/>
+					<p:calendar id="fecha-termino" pattern="dd-MM-yyyy" value="#{actividadVentanasMBean.actVentanas.fechaHasta}"  required="true" requiredMessage="Ingrese una Fecha de T&eacute;rmino"
+								locale="es" size="20" readonlyInput="true" mindate="#{actividadVentanasMBean.actVentanas.fechaDesde}">
+					</p:calendar>
+
+			        <p:commandButton value="Buscar" 
+			        				 icon="ui-icon-search" 
+			        				 actionListener="#{actividadVentanasMBean.cargaActividadPorVentanas}" 
+			        				 update="panel-filtro-fechas, :panel-resultado-fechas,:form-tabla-ver-detalle-actividad " 
+			        				 onstart="PF('dialogo-loading').show()" onsuccess="PF('dialogo-loading').hide()"/>
+		           </h:panelGrid>
+	        </h:form>
+	   </p:panel>
+	   <br/>
+	   <h:panelGrid  id="panel-resultado-fechas">
+			<h:form id="form-tabla-ver-detalle-actividad" >
+				<p:dataTable id="dt-tabla-detalle-actividad-ventana" value="#{actividadVentanasMBean.actividadVentanas}" var="act"
+									 emptyMessage="Sin Registros." sortBy="#{act.idVentana}">
+			        <f:facet name="header">
+						<div style="text-align: right">
+							<h:commandLink id="exportar-excel-detalle-actividad-ventana" rendered="true"
+								style="margin-right:20px">
+								<p:graphicImage name="excel.png" library="img"
+									style="width:24px;height:24px;" />
+								<p:dataExporter type="xls"
+									target="dt-tabla-detalle-actividad-ventana"
+									fileName="detalle-actividad-ventana" />
+							</h:commandLink>
+							<p:tooltip id="toolTip-excel-detalle-actividad-ventana"
+								for="exportar-excel-detalle-actividad-ventana" value="Exportar a Excel"
+								showEffect="fade" hideEffect="fade" position="left" />
+						</div>
+					</f:facet>
+			        <p:column headerText="VM" groupRow="true" width="20">
+			            <h:outputText value="#{act.idVentana}" />
+			        </p:column>
+			        <p:column headerText="ACT" width="20">
+			            <h:outputText value="#{act.idActividad}" />
+			        </p:column>
+			        <p:column headerText="ITO" width="20">
+			            <h:outputText value="#{act.ito}" />
+			        </p:column>
+			        <p:column headerText="CLIENTE" width="40">
+			            <h:outputText value="#{act.cliente}" />
+			        </p:column>
+			        <p:column headerText="PROYECTO" width="150">
+			            <h:outputText value="#{act.nombreProyecto}" />
+			        </p:column>
+			        <p:column headerText="CRQ" width="50">
+			            <h:outputText value="#{act.crq}" />
+			        </p:column>
+			        <p:column headerText="DETALLE" width="150">
+			            <h:outputText value="#{act.detalleAct}" />
+			        </p:column>
+			        <p:column headerText="NIVEL" width="25">
+			            <h:outputText value="#{act.nivel}" />
+			        </p:column>
+			        <p:column headerText="SITIO" width="100">
+			            <h:outputText value="#{act.sitio}" />
+			        </p:column>
+			        <p:column headerText="FECHA INICIO" width="100">
+			            <h:outputText value="#{act.fechaInicio}" >
+							<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+						</h:outputText>
+			        </p:column>
+			        <p:column headerText="FECHA T&#201;RMINO" width="100">
+			            <h:outputText value="#{act.fechaTermino}" >
+							<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+						</h:outputText>
+			        </p:column>
+			        <p:column headerText="STATUS ACTIVIDAD" width="90">
+			            <h:outputText value="#{act.statusNoc}" />
+			        </p:column>
+			        <p:column headerText="OBSERVACIONES" width="150">
+			            <h:outputText value="#{act.observaciones}" />
+			        </p:column>
+		    	</p:dataTable>	
+			</h:form>
+		</h:panelGrid>
+	</p:panel>
+</html>
